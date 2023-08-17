@@ -1,40 +1,19 @@
 <?php
 
 namespace Database\Seeders;
-
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-class UsersTableSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed the application's database.
      *
      * @return void
      */
     public function run()
     {
-        // create user
-        User::factory()->count(10)->create();
-         // create Admin
-        DB::table('users')->insert(array([
-            'first_name' => 'Admin',
-            'last_name' => 'Admin',
-            'email'=>'admin@admin.com',
-            'status' => 'admin',
-            'password'=>Hash::make('Admin'),
-        ],
-        [
-            'first_name' => 'Quentin',
-            'last_name' => 'Leroy',
-            'email'=>'quentinleroy@example.com',
-            'status' => 'client',
-            'password'=>Hash::make('QuentinL'),
-
-
-        ]));
-
+        $this->call(UserTableSeeder::class);
+        $this->call(CurrenciesTableSeeder::class);
+        $this->call(TransactionsTableSeeder::class);
     }
 }

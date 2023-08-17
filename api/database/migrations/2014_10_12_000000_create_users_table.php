@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 100);
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('status', ['admin', 'client']);
+            $table->enum("status", ["admin", "client"]);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

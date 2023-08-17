@@ -2,10 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Currency;
-use App\Models\Transaction;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,5 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
         $this->call(TransactionsTableSeeder::class);
+        $this->call(HistoryTableSeeder::class);
+        $this->call(WalletTableSeeder::class);
     }
 }

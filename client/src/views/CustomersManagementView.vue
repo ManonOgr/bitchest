@@ -4,12 +4,12 @@
   
       <v-app-bar app>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>Portefeuille</v-toolbar-title>
+        <v-toolbar-title>Gestion des clients</v-toolbar-title>
       </v-app-bar>
   
       <v-main>
         <v-container>
-          <p>Contenu Page Wallet</p>
+          <p>Contenu Page Gestions des clients</p>
         </v-container>
       </v-main>
     </v-app>

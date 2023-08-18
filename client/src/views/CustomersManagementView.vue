@@ -15,8 +15,7 @@
             <v-table height="300px">
               <thead>
                 <tr>
-                  <th class="text-left">Nom de l'utilisateur</th>
-                  <th class="text-left">Prénom de l'utilisateur</th>
+                  <th class="text-left">id</th>
                   <th class="text-left">Email</th>
                   <th class="text-left">Status</th>
                   <th class="text-left">Modifier</th>
@@ -26,8 +25,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Quentin</td>
-                  <td>Leroy</td>
+                  <td>1</td>
                   <td>dldl@ddjdj.com</td>
                   <td>client</td>
                   <td>

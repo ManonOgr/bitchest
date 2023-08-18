@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer app>
+    <img src="../assets/bitchest_logo.png" alt="logo" style="max-width: 100%; height: auto;">
     <v-list>
       <v-list-item link>
         <v-list-item-icon>

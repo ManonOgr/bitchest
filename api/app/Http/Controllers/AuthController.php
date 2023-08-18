@@ -11,8 +11,14 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 
-// ...
+    public function logout(Request $request)
+    {
 
+        Auth::guard('web')->logout();
+
+        return response()->noContent();
+    }
+    
     public function login(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -26,24 +32,24 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json(['errors' => 'Wrong credentials'],401);
+            return response()->json(['errors' => 'Wrong credentials'], 401);
         }
 
         $password = $request->password;
-        if (!Hash::check($password, $user->password)){
+        if (!Hash::check($password, $user->password)) {
             return response()->json(['errors' => 'Wrong credentials'], 403);
         }
 
         $token = $user->remember_token;
 
-        return response()->json(['accessToken' => $token,"user"=>$user], 202);
+        return response()->json(['accessToken' => $token, "user" => $user], 202);
 
-    // système d'authentification de Laravel pour connecter l'utilisateur
+        // système d'authentification de Laravel pour connecter l'utilisateur
         $user = Auth::user();
 
-   // Si le rôle n'est ni admin ni client, renvoyez une réponse par défaut
+        // Si le rôle n'est ni admin ni client, renvoyez une réponse par défaut
         return response()->json(['message' => 'Unknown role'], 403);
-        }
+    }
 
     public function index()
     {

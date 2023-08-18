@@ -32,14 +32,12 @@ export default {
             }
           )
           .then((res) => {
-            console.log(res)
+            console.log(res);
             if (res.data.user.status === "client") {
-        router.push('/dashboardclient');
-      } else if (res.data.user.status === 'admin') {
-        router.push('/dashboardadmin');
-      }
-            //If the connection is successful then it redirects to the admin page
-          
+              router.push("/dashboardclient");
+            } else if (res.data.user.status === "admin") {
+              router.push("/dashboardadmin");
+            }
           });
 
         //unable to connect
@@ -47,9 +45,6 @@ export default {
         console.log(error);
       }
     },
-  },
-  logout() {
-    localStorage.removeItem("admin");
   },
 };
 </script>

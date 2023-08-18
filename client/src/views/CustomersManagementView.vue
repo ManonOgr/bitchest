@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <sidebar-nav></sidebar-nav>
+    <side-bar-nav></side-bar-nav>
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -9,38 +9,34 @@
 
     <v-main>
       <v-container>
-        <div class="container-tab-admin">
-          <v-btn variant="tonal"> Ajout </v-btn>
-          <div class="tab">
-            <v-table height="300px">
+        <div class="pa-2">
+          <h1 class="headline">Liste des Utilisateurs</h1>
+          <v-responsive>
+            <table class="table">
               <thead>
                 <tr>
-                  <th class="text-left">id</th>
-                  <th class="text-left">Email</th>
-                  <th class="text-left">Status</th>
-                  <th class="text-left">Modifier</th>
+                  <th class="text-left id-column">ID</th>
+                  <th class="text-left email-column">Email</th>
+                  <th class="text-left">Statut</th>
                   <th class="text-left">Supprimer</th>
-                  <th class="text-left">Gerer</th>
+                  <th class="text-left">Modifier</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>dldl@ddjdj.com</td>
-                  <td>client</td>
-                  <td>
-                    <v-btn variant="tonal"> Modifier </v-btn>
+                <tr v-for="user in users" :key="user.id">
+                  <td class="text-left">{{ user.id }}</td>
+                  <td class="text-left email-column">{{ user.email }}</td>
+                  <td class="text-left">{{ user.status }}</td>
+                  <td class="text-left">
+                    <v-btn  class="mt-2" color="error">Supprimer</v-btn>
                   </td>
-                  <td>
-                    <v-btn variant="tonal"> Supprimer </v-btn>
-                  </td>
-                  <td>
-                    <v-btn variant="tonal"> Gerer </v-btn>
+                  <td class="text-left">
+                    <v-btn class="mt-2" color="primary">Modifier</v-btn>
                   </td>
                 </tr>
               </tbody>
-            </v-table>
-          </div>
+            </table>
+          </v-responsive>
         </div>
       </v-container>
     </v-main>
@@ -48,30 +44,58 @@
 </template>
 
 <script>
-import SidebarNav from "@/components/SideBarNav.vue";
+import SideBarNav from '@/components/SideBarNav.vue';
+import axios from 'axios';
 
 export default {
-  components: {
-    SidebarNav,
-  },
-  data() {
-    return {
-      drawer: false,
-    };
-  },
+    data() {
+        return {
+            users: []
+        };
+    },
+    mounted() {
+        this.fetchUsers();
+    },
+    methods: {
+        fetchUsers() {
+            axios.get('/api/users')
+                .then(response => {
+                this.users = response.data;
+            })
+                .catch(error => {
+                console.error(error);
+            });
+        },
+    },
+    components: { SideBarNav }
 };
 </script>
 
 <style>
-.container-tab-admin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
+.table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
 }
 
-.tab {
-  margin-top: 50px;
+.text-left {
+  text-align: left;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.email-column {
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.id-column {
+  width: 5%; /* Adjust the width as needed */
+}
+
+.pa-2 {
+  padding: 16px;
 }
 </style>

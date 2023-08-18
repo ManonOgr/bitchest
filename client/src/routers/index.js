@@ -22,37 +22,40 @@ const router = createRouter({
     {
       path: '/dashboardadmin',
       name: 'dashboardadmin',
-      component: AdminView
+      component: AdminView,
+      meta: { requiresAuth: true, roles: ['admin'] }
     },
     {
       path: '/dashboardclient',
       name: 'dashboardclient',
-      component: ClientView
+      component: ClientView,
+      meta: { requiresAuth: true, roles: ['client'] }
     },
     {
       path: '/wallet',
       name: 'wallet',
-      component: WalletView
+      component: WalletView,
+      meta: { requiresAuth: true, roles: ['client'] }
     },
     {
       path: '/ratesclient',
       name: 'ratesclient',
-      component: RatesCryptosClientView
+      component: RatesCryptosClientView,
+      meta: { requiresAuth: true, roles: ['client'] }
     },
     {
       path: '/ratesadmin',
       name: 'ratesadmin',
-      component: RatesCryptosAdminView
+      component: RatesCryptosAdminView,
+      meta: { requiresAuth: true, roles: ['admin'] }
     },
     {
       path: '/customers',
       name: 'customers',
-      component: CustomersManagementView
+      component: CustomersManagementView,
+      meta: { requiresAuth: true, roles: ['admin'] }
     },
     
   ]
 })
-
-
-
 export default router

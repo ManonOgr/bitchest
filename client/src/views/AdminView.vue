@@ -4,13 +4,12 @@
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Dashboard Admin</v-toolbar-title>
+      <v-toolbar-title>Données Personnelles (Admin)</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
       <v-container>
         <dashboard-admin></dashboard-admin>
-        <p>Contenu Dashboard Admin</p>
       </v-container>
     </v-main>
   </v-app>

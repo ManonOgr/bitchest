@@ -10,32 +10,40 @@
     <v-main>
       <v-container>
         <div class="container-tab-admin">
+          <v-btn variant="tonal"> Ajout </v-btn>
           <div class="tab">
             <v-table height="300px">
               <thead>
                 <tr>
                   <th class="text-left">Nom de l'utilisateur</th>
                   <th class="text-left">Prénom de l'utilisateur</th>
+                  <th class="text-left">Email</th>
+                  <th class="text-left">Status</th>
                   <th class="text-left">Modifier</th>
                   <th class="text-left">Supprimer</th>
+                  <th class="text-left">Gerer</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Quentin</td>
                   <td>Leroy</td>
+                  <td>dldl@ddjdj.com</td>
+                  <td>client</td>
                   <td>
                     <v-btn variant="tonal"> Modifier </v-btn>
                   </td>
                   <td>
                     <v-btn variant="tonal"> Supprimer </v-btn>
                   </td>
+                  <td>
+                    <v-btn variant="tonal"> Gerer </v-btn>
+                  </td>
                 </tr>
               </tbody>
             </v-table>
           </div>
         </div>
-        <p>Contenu Page Gestions des clients</p>
       </v-container>
     </v-main>
   </v-app>

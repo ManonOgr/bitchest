@@ -16,15 +16,31 @@ export default {
     formSubmit() {
       try {
         axios
-          .post("/api/login", {
-            email: this.form.email,
-            password: this.form.password,
-          })
-          //successful connection
-          .then(() => {
-              //If the connection is successful then it redirects to the admin page
-            router.push("/admin");  
-          })
+          .post(
+            "http://127.0.0.1:8000/api/login",
+            {
+              email: this.form.email,
+              password: this.form.password,
+            },
+            {
+              // withCredentials: true,
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res)
+            if (res.data.user.status === "client") {
+        router.push('/dashboardclient');
+      } else if (res.data.user.status === 'admin') {
+        router.push('/dashboardadmin');
+      }
+            //If the connection is successful then it redirects to the admin page
+          
+          });
 
         //unable to connect
       } catch (error) {
@@ -33,14 +49,18 @@ export default {
     },
   },
   logout() {
-    localStorage.removeItem('admin');
+    localStorage.removeItem("admin");
   },
 };
 </script>
 
 <template>
   <div class="login-box">
-    <img src="../assets/bitchest_logo.png" alt="logo" style="max-width: 100%; height: auto;">
+    <img
+      src="../assets/bitchest_logo.png"
+      alt="logo"
+      style="max-width: 100%; height: auto"
+    />
     <form>
       <div class="user-box">
         <input
@@ -66,7 +86,6 @@ export default {
     </form>
   </div>
 </template>
-
 
 <style>
 html {

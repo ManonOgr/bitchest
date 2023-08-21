@@ -27,4 +27,5 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::get('/users', [UserController::class, 'getUsers']);
 
-Route::delete('/users/{id}', 'UserController@destroy');
+Route::delete('/users/{id}', [UserController::class, 'destroy']);
+

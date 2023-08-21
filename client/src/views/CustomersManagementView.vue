@@ -28,7 +28,7 @@
                   <td class="text-left email-column">{{ user.email }}</td>
                   <td class="text-left">{{ user.status }}</td>
                   <td class="text-left">
-                    <v-btn  class="mt-2" color="error">Supprimer</v-btn>
+                    <v-btn @click="deleteUser(user.id)" class="mt-2" color="error">Supprimer</v-btn>
                   </td>
                   <td class="text-left">
                     <v-btn class="mt-2" color="primary">Modifier</v-btn>
@@ -66,7 +66,17 @@ export default {
                 console.error(error);
             });
         },
+        async deleteUser(id) {
+    try {
+        await axios.delete(`/api/users/${id}`);
+        // Remove the user from the list only after successful deletion
+        this.users = this.users.filter(user => user.id !== id);
+    } catch (error) {
+        console.error(error);
+    }
+},
     },
+
     components: { SideBarNav }
 };
 </script>

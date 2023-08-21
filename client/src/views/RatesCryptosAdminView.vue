@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <sidebar-nav-client></sidebar-nav-client>
+    <sidebar-nav></sidebar-nav>
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -30,11 +30,11 @@
 
 <script>
 import axios from "axios";
-import SidebarNavClient from "@/components/SideBarNavClient.vue";
+import SidebarNav from "@/components/SideBarNav.vue";
 
 export default {
   components: {
-    SidebarNavClient,
+    SidebarNav,
   },
   data() {
     return {

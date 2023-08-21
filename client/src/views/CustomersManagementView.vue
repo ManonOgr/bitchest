@@ -13,7 +13,7 @@
           <h1 class="headline">Liste des Utilisateurs</h1>
           <v-responsive>
             <router-link to="/add-user">
-              <button>Ajouter Utilisateur</button>
+              <v-btn color="success">Ajouter</v-btn>
             </router-link>
             <table class="table">
               <thead>
@@ -39,7 +39,7 @@
                     >
                   </td>
                   <td class="text-left">
-                      <v-btn @click="$router.push({ name: 'updateuser', params: { id: user.id } })">Modifier</v-btn>
+                      <v-btn color="purple" @click="$router.push({ name: 'updateuser', params: { id: user.id } })">Modifier</v-btn>
                   </td>
                 </tr>
               </tbody>

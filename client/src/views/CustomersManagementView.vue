@@ -12,6 +12,9 @@
         <div class="pa-2">
           <h1 class="headline">Liste des Utilisateurs</h1>
           <v-responsive>
+            <router-link to="/add-user">
+      <button>Ajouter Utilisateur</button>
+    </router-link>
             <table class="table">
               <thead>
                 <tr>

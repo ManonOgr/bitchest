@@ -8,6 +8,7 @@ import WalletView from '@/views/WalletView.vue';
 import RatesCryptosClientView from '@/views/RatesCryptosClientView.vue';
 import RatesCryptosAdminView from '@/views/RatesCryptosAdminView.vue'
 import CustomersManagementView from '@/views/CustomersManagementView.vue';
+import AddUsersView from '@/views/AddUsersView.vue';
 
 
 
@@ -55,6 +56,11 @@ const router = createRouter({
       component: CustomersManagementView,
       meta: { requiresAuth: true, roles: ['admin'] }
     },
+    {
+      path: '/add-user',
+      name: 'adduser',
+      component: AddUsersView
+    }
     
   ]
 })

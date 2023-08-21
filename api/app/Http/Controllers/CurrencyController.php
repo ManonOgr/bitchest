@@ -21,21 +21,12 @@ class CurrencyController extends Controller
     /**
      * Display the currencies list
      */
-    public function index(API $api)
-    {
-        // Get cryptocurrencies
-        $currencies = Currency::all();
-        // Get data
-        $data = $api->getMultipleData($currencies->pluck('api_id')->implode(','));
-        // Loop through all cryptocurrencies
-        foreach ($currencies as $currency) {
-            $currency_data = $data[$currency->api_id];
-            $currency->current_rate = $currency_data['current_rate'];
-            $currency->change = $currency_data['change'];
-        }
 
-        return view('currencies.index', ['currencies' => $currencies]);
-    }
+     public function index()
+     {
+         $names = Currency::pluck('name');
+         return response()->json($names);
+     }
 
     /**
      * Display a currency's.

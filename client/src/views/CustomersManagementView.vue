@@ -13,8 +13,8 @@
           <h1 class="headline">Liste des Utilisateurs</h1>
           <v-responsive>
             <router-link to="/add-user">
-      <button>Ajouter Utilisateur</button>
-    </router-link>
+              <button>Ajouter Utilisateur</button>
+            </router-link>
             <table class="table">
               <thead>
                 <tr>
@@ -31,10 +31,15 @@
                   <td class="text-left email-column">{{ user.email }}</td>
                   <td class="text-left">{{ user.status }}</td>
                   <td class="text-left">
-                    <v-btn @click="deleteUser(user.id)" class="mt-2" color="error">Supprimer</v-btn>
+                    <v-btn
+                      @click="deleteUser(user.id)"
+                      class="mt-2"
+                      color="error"
+                      >Supprimer</v-btn
+                    >
                   </td>
                   <td class="text-left">
-                    <v-btn class="mt-2" color="primary">Modifier</v-btn>
+                      <v-btn @click="$router.push({ name: 'updateuser', params: { id: user.id } })">Modifier</v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -47,40 +52,41 @@
 </template>
 
 <script>
-import SideBarNav from '@/components/SideBarNav.vue';
-import axios from 'axios';
+import SideBarNav from "@/components/SideBarNav.vue";
+import axios from "axios";
 
 export default {
-    data() {
-        return {
-            users: []
-        };
+  data() {
+    return {
+      users: [],
+    };
+  },
+  mounted() {
+    this.fetchUsers();
+  },
+  methods: {
+    fetchUsers() {
+      axios
+        .get("/api/users")
+        .then((response) => {
+          this.users = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
-    mounted() {
-        this.fetchUsers();
-    },
-    methods: {
-        fetchUsers() {
-            axios.get('/api/users')
-                .then(response => {
-                this.users = response.data;
-            })
-                .catch(error => {
-                console.error(error);
-            });
-        },
-        async deleteUser(id) {
-    try {
+    async deleteUser(id) {
+      try {
         await axios.delete(`/api/users/${id}`);
         // Remove the user from the list only after successful deletion
-        this.users = this.users.filter(user => user.id !== id);
-    } catch (error) {
+        this.users = this.users.filter((user) => user.id !== id);
+      } catch (error) {
         console.error(error);
-    }
-},
+      }
     },
+  },
 
-    components: { SideBarNav }
+  components: { SideBarNav },
 };
 </script>
 

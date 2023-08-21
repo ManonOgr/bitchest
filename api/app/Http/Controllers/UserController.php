@@ -39,6 +39,21 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function update(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    $validatedData = $request->validate([
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'status' => 'required|in:client,admin',
+    ]);
+
+    $user->update($validatedData);
+
+    return response()->json(['message' => 'User updated successfully']);
+}
 
     public function destroy($id)
     {

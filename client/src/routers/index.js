@@ -9,6 +9,7 @@ import RatesCryptosClientView from '@/views/RatesCryptosClientView.vue';
 import RatesCryptosAdminView from '@/views/RatesCryptosAdminView.vue'
 import CustomersManagementView from '@/views/CustomersManagementView.vue';
 import AddUsersView from '@/views/AddUsersView.vue';
+import UpdateUsersView from '@/views/UpdateUsersView.vue';
 
 
 
@@ -59,7 +60,12 @@ const router = createRouter({
     {
       path: '/add-user',
       name: 'adduser',
-      component: AddUsersView
+      component: AddUsersView,
+    },
+    {
+        path: '/update-user/:id', // Utilisez :id pour capturer l'ID de l'utilisateur
+        name: 'updateuser',
+        component: UpdateUsersView,
     }
     
   ]

@@ -21,7 +21,12 @@ class CurrencyController extends Controller
     /**
      * Display the currencies list
      */
+    public function getCurrencies()
+    {
+        $currencies = Currency::select('id', 'name')->get();
 
+        return response()->json($currencies);
+    }
      public function index()
      {
          $names = Currency::pluck('name');

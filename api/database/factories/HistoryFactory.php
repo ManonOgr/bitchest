@@ -19,7 +19,7 @@ class HistoryFactory extends Factory
     {
         return [
             'name' => Currency::all()->random()->name,
-            'quoting' => $this->faker->randomDigit(),
+            'quoting' => $this->faker->randomFloat(5, 0, 1000),
         ];
     }
 }

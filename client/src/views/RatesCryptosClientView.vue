@@ -12,14 +12,16 @@
         <v-table>
           <thead>
             <tr>
+              <th class="text-left">Id</th>
               <th class="text-left">Name</th>
               <th class="text-left">Cours</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="crypto in cryptos" :key="crypto">
-              <td>{{ crypto }}</td>
-              <td>iuyt</td>
+              <td>{{ crypto.id }}</td>
+              <td>{{ crypto.name }}</td>
+              <td>{{ getCryptoQuoting(crypto) }} €</td>
             </tr>
           </tbody>
         </v-table>
@@ -44,19 +46,30 @@ export default {
   },
   mounted() {
     this.fetchCryptos();
+    this.fetchHistory();
   },
   methods: {
     async fetchCryptos() {
+      const URL = "http://localhost:8000/api/currencies";
       try {
-        const response = await axios.get("/api/currencies/names");
+        const response = await axios.get(URL);
         this.cryptos = response.data;
-        console.log(response.data);
-        console.log(this.cryptos);
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des cryptomonnaies :",
-          error
-        );
+        console.error("Error fetching data:", error);
+      }
+    },
+    getCryptoQuoting(crypto) {
+      return crypto.history ? crypto.history.quoting : 'N/A';
+    },
+    async fetchHistory() {
+      const URL = "http://localhost:8000/api/history";
+      try {
+        const response = await axios.get(URL);
+        this.cryptos.forEach((crypto, index) => {
+          crypto.history = response.data[index];
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     },
   },

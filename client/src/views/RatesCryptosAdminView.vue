@@ -21,7 +21,7 @@
             <tr v-for="crypto in cryptos" :key="crypto">
               <td>{{ crypto.id }}</td>
               <td>{{ crypto.name }}</td>
-              <td>{{ getCryptoQuoting(crypto) }}</td>
+              <td>{{ getCryptoQuoting(crypto) }} €</td>
             </tr>
           </tbody>
         </v-table>

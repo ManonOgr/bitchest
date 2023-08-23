@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function getUsers()
     {
-        $users = User::select('id', 'email', 'status')->get();
+        $users = User::select('id','first_name', 'last_name', 'email', 'status')->get();
 
         return response()->json($users);
     }

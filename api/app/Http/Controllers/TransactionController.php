@@ -19,7 +19,7 @@ class TransactionController extends Controller
 
      public function getTransaction()
      {
-         $currencies = Transaction::select('id', 'currency_id', 'user_id', 'amount', 'quantity', 'purcharse_price', 'purcharse_date', 'sold',' selling_amount', ' selling_price', 'selling_date')->get();
+         $currencies = Transaction::select('id', 'currency_id', 'user_id', 'amount', 'quantity', 'purchare_price', 'purchare_date', 'sold',' selling_amount', ' selling_price', 'selling_date')->get();
          return response()->json($currencies);
      }
 

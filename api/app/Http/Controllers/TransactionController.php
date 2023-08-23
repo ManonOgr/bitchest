@@ -178,4 +178,10 @@ class TransactionController extends Controller
                 ->with('message', 'The transaction was successful. Your sold : ' . floatval($quantity_total) . ' ' . $currency->name . ' for an amount of ' . round($selling_amount_total, 2) . ' ' . config('currency')['symbol'] . '.');
         }
     }
+
+    public function status()
+    {
+        // Renvoie une réponse JSON avec le statut "ok"
+        return response()->json(['status' => 'ok']);
+    }
 }

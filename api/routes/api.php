@@ -44,5 +44,6 @@ Route::get('/transaction', [TransactionController::class, 'getTransaction']);
 
 Route::get('/currencies/names', [CurrencyController::class, 'index']);
 
-
+//state
+Route::get('/status', [TransactionController::class, 'status']);
 

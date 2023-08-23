@@ -23,6 +23,7 @@
         <v-col cols="12" md="6">
          
           <select id="status" v-model="userData.status" required>
+            <option value="" disabled selected>Choisissez un statut</option>
             <option value="client">Client</option>
             <option value="admin">Admin</option>
           </select>
@@ -31,7 +32,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-btn @click="addUser" color="primary">Ajouter</v-btn>
+          <v-btn @click="addUser" depressed>Ajouter</v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -51,7 +52,7 @@ export default {
         last_name: '',
         email: '',
         password: '',
-        status: 'client'
+        status: ''
       }
     };
   },
@@ -77,5 +78,17 @@ export default {
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
   border-radius: 10px;
+}
+
+/* Style de base pour le select */
+/* Style de base pour le select */
+#status {
+  font-size: 16px;
+  padding: 10px;
+  border-bottom: 1px solid rgb(62, 61, 61);
+  color: #333;
+  background: rgba(36, 36, 36, 0.1);;
+  width: 100%;
+  margin: 8px 0;
 }
 </style>

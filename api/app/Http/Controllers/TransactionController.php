@@ -16,6 +16,13 @@ class TransactionController extends Controller
      *
      * @return void
      */
+
+     public function getTransaction()
+     {
+         $currencies = Transaction::select('id', 'currency_id', 'user_id', 'amount', 'quantity', 'purcharse_price', 'purcharse_date', 'sold',' selling_amount', ' selling_price', 'selling_date')->get();
+         return response()->json($currencies);
+     }
+
     public function __construct(Request $request)
     {
         if (Str::contains($request->path(), 'create')) {

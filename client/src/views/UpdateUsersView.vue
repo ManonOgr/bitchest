@@ -1,33 +1,23 @@
 <template>
-    <div>
-      <h1>Modifier l'Utilisateur</h1>
-      <form @submit.prevent="updateUser">
-        <div>
-          <label for="first_name">Prénom</label>
-          <input type="text" id="first_name" v-model="userData.first_name" required>
-        </div>
-        <div>
-          <label for="last_name">Nom de Famille</label>
-          <input type="text" id="last_name" v-model="userData.last_name" required>
-        </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="userData.email" required>
-        </div>
-        <div>
-          <label for="status">Statut</label>
-          <select id="status" v-model="userData.status" required>
-            <option value="client">Client</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <button type="submit">Enregistrer Modifications</button>
-      </form>
-    </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
+  <v-container class="mt-10 add-box">
+    <h1 class="headline">Modifier l'Utilisateur</h1>
+    <v-form @submit.prevent="updateUser">
+      <v-text-field v-model="userData.first_name" label="Prénom" required></v-text-field>
+      <v-text-field v-model="userData.last_name" label="Nom de Famille" required></v-text-field>
+      <v-text-field v-model="userData.email" label="Email" type="email" required></v-text-field>
+      <div>
+  <select id="status" v-model="userData.status" required>
+    <option value="client">Client</option>
+    <option value="admin">Admin</option>
+  </select>
+</div>
+      <v-btn type="submit" color="primary">Enregistrer</v-btn>
+    </v-form>
+  </v-container>
+</template>
+
+<script>
+import axios from 'axios';
 
 export default {
   data() {
@@ -45,39 +35,41 @@ export default {
   },
   methods: {
     fetchUser() {
-  const userId = this.$route.params.id; // Obtient l'ID de l'URL
-  axios.get(`/api/users/${userId}`)
-    .then(response => {
-      this.userData = response.data;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-},
-
-    
+      const userId = this.$route.params.id; // Obtient l'ID de l'URL
+      axios.get(`/api/users/${userId}`)
+        .then(response => {
+          this.userData = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
     updateUser() {
-  const userId = this.$route.params.id;
-  axios.put(`/api/users/${userId}`, this.userData)
-    .then(response => {
-      console.log(response.data.message);
-      // Redirige vers la liste des utilisateurs après succès
-      this.$router.push('/customers'); // Assurez-vous que le chemin est correct
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      const userId = this.$route.params.id;
+      axios.put(`/api/users/${userId}`, this.userData)
+        .then(response => {
+          console.log(response.data.message);
+          // Redirige vers la liste des utilisateurs après succès
+          this.$router.push('/customers'); // Assurez-vous que le chemin est correct
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.headline {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-    }
-  };
-
-
-
-
-  </script>
-  
-  <style>
-  /* Vos styles CSS */
-  </style>
-  
+.add-box {
+  background: rgba(104, 102, 102, 0.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+</style>

@@ -1,52 +1,61 @@
 <template>
-    <div>
-      <h1>Ajouter un Utilisateur</h1>
-      <form @submit.prevent="addUser">
-        <div>
-          <label for="first_name">Prénom</label>
-          <input type="text" id="first_name" v-model="userData.first_name" required>
-        </div>
-        <div>
-          <label for="last_name">Nom de Famille</label>
-          <input type="text" id="last_name" v-model="userData.last_name" required>
-        </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="userData.email" required>
-        </div>
-        <div>
-          <label for="password">Mot de Passe</label>
-          <input type="password" id="password" v-model="userData.password" required>
-        </div>
-        <div>
-          <label for="status">Statut</label>
+  
+    <v-container class="mt-10 add-box">
+    <h1 class="text-h5">Ajouter un Utilisateur</h1>
+    <v-form @submit.prevent="addUser" class="mt-10">
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-text-field v-model="userData.first_name" label="Prénom" required></v-text-field>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field v-model="userData.last_name" label="Nom de Famille" required></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-text-field v-model="userData.email" label="Email" type="email" required></v-text-field>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field v-model="userData.password" label="Mot de Passe" type="password" required></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="6">
+         
           <select id="status" v-model="userData.status" required>
             <option value="client">Client</option>
             <option value="admin">Admin</option>
           </select>
-        </div>
-        <v-btn @click="addUser" color="primary">Ajouter Utilisateur</v-btn>
+   
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-btn @click="addUser" color="primary">Ajouter</v-btn>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-container>
 
-      </form>
-    </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        userData: {
-          first_name: '',
-          last_name: '',
-          email: '',
-          password: '',
-          status: 'client'
-        }
-      };
-    },
-    methods: {
+
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      userData: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+        status: 'client'
+      }
+    };
+  },
+  methods: {
     addUser() {
       axios.post('/api/users', this.userData)
         .then(response => {
@@ -58,11 +67,15 @@
           console.error(error);
         });
     }
-    }
-  };
-  </script>
-  
-  <style>
-  /* Ajoutez vos styles CSS ici */
-  </style>
-  
+  }
+};
+</script>
+
+<style>
+.add-box {
+  background: rgba(104, 102, 102, 0.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+</style>

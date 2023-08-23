@@ -90,7 +90,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: linear-gradient(#80b918, #80ed99);
+  background: linear-gradient(#80b918, #95d5b2);
 }
 
 .login-box {

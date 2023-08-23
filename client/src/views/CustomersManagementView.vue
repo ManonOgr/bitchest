@@ -16,18 +16,22 @@
               <v-btn color="success">Ajouter</v-btn>
             </router-link>
             <v-table height="300px">
-    <thead>
-      <tr>
-        <th class="text-left id-column">ID</th>
+              <thead>
+                <tr>
+                  <th class="text-left id-column">ID</th>
+                  <th class="text-left">Prénom</th>
+                  <th class="text-left">Nom</th>
                   <th class="text-left email-column">Email</th>
                   <th class="text-left">Statut</th>
                   <th class="text-left">Supprimer</th>
                   <th class="text-left">Modifier</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="user in users" :key="user.id">
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="user in users" :key="user.id">
                   <td class="text-left">{{ user.id }}</td>
+                  <td class="text-left">{{ user.first_name }}</td>
+                  <td class="text-left">{{ user.last_name }}</td>
                   <td class="text-left email-column">{{ user.email }}</td>
                   <td class="text-left">{{ user.status }}</td>
                   <td class="text-left">
@@ -39,18 +43,26 @@
                     >
                   </td>
                   <td class="text-left">
-                      <v-btn color="purple" @click="$router.push({ name: 'updateuser', params: { id: user.id } })">Modifier</v-btn>
+                    <v-btn
+                      color="purple"
+                      @click="
+                        $router.push({
+                          name: 'updateuser',
+                          params: { id: user.id },
+                        })
+                      "
+                      >Modifier</v-btn
+                    >
                   </td>
                 </tr>
-    </tbody>
-  </v-table>
-
+              </tbody>
+            </v-table>
           </v-responsive>
         </div>
       </v-container>
     </v-main>
   </v-app>
-</template> 
+</template>
 
 <script>
 import SideBarNav from "@/components/SideBarNav.vue";

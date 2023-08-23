@@ -14,7 +14,7 @@ class TransactionsTableSeeder extends Seeder
      */
     public function run()
     {
-        Transaction::factory()->count(5)->create();
+        Transaction::factory()->count(20)->create();
 
         // Delete admin transaction
         $admins = DB::table('users')->where('status', 'admin')->get('id')->toArray();

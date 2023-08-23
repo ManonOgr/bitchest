@@ -38,7 +38,7 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 Route::get('/currencies', [CurrencyController::class, 'getCurrencies']);
 
 Route::get('/history', [HistoryController::class, 'getHistory']);
-Route::get('/wallet', [WalletController::class, 'getController']);
+Route::get('/wallet', [WalletController::class, 'getWallet']);
 
 Route::get('/currencies/names', [CurrencyController::class, 'index']);
 

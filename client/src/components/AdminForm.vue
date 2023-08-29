@@ -63,7 +63,7 @@ export default {
 
         const userData = response.data.user;
         // Store user data in Vuex or other suitable state management
-        this.$store.commit('setUserData', userData);
+        this.$store.commit("setUserData", userData);
 
         if (userData.status === "client") {
           router.push("/dashboardclient");
@@ -72,7 +72,11 @@ export default {
         }
       } catch (error) {
         console.log("Erreur lors de la requête : ", error);
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           console.log("Erreurs de validation : ", error.response.data.errors);
         }
       }
@@ -153,5 +157,4 @@ button {
   width: 150px;
   height: 30px;
 }
-
 </style>

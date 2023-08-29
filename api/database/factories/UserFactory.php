@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             // only Customer
-            'status' => $this->faker->randomDigit <= 0 ? : 'client',
+            'status' => $this->faker->randomDigit <= 0 ?: 'client',
             'remember_token' => Str::random(10)
         ];
     }

@@ -3,7 +3,9 @@
     <v-main>
       <v-container>
         <v-card>
-          <v-card-title>Informations Admin : {{ prenom }} {{ nom }}</v-card-title>
+          <v-card-title
+            >Informations Admin : {{ prenom }} {{ nom }}</v-card-title
+          >
           <v-card-text>
             <p><strong>Nom :</strong> {{ nom }}</p>
             <p><strong>Prénom :</strong> {{ prenom }}</p>
@@ -20,10 +22,10 @@
 export default {
   data() {
     return {
-      nom: '',
-      prenom: '',
-      email: '',
-      status:''
+      nom: "",
+      prenom: "",
+      email: "",
+      status: "",
     };
   },
   mounted() {

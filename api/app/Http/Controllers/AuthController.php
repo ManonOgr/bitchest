@@ -18,7 +18,7 @@ class AuthController extends Controller
 
         return response()->noContent();
     }
-    
+
     public function login(Request $request)
     {
         $validate = Validator::make($request->all(), [

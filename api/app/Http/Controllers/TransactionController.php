@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -17,11 +18,11 @@ class TransactionController extends Controller
      * @return void
      */
 
-     public function getTransaction()
-     {
-         $currencies = Transaction::select('id', 'currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date', 'sold','selling_amount', 'selling_price', 'selling_date')->get();
-         return response()->json($currencies);
-     }
+    public function getTransaction()
+    {
+        $currencies = Transaction::select('id', 'currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date', 'sold', 'selling_amount', 'selling_price', 'selling_date')->get();
+        return response()->json($currencies);
+    }
 
     public function __construct(Request $request)
     {
@@ -35,7 +36,8 @@ class TransactionController extends Controller
             });
         }
 
-        date_default_timezone_set('Europe/Paris');    }
+        date_default_timezone_set('Europe/Paris');
+    }
 
     /**
      * Display the user's transactions (all of them or by currency).
@@ -43,7 +45,7 @@ class TransactionController extends Controller
     public function index(Currency $currency = null)
     {  // If a currency is specified :
         $transactions = $currency
-             // Get the uder's transactions corresponding to this currency
+            // Get the uder's transactions corresponding to this currency
             ? Auth::user()->transactions()->where('currency_id', $currency->id)->get()
             // Else, get all of their transactions
             : Auth::user()->transactions;
@@ -67,7 +69,7 @@ class TransactionController extends Controller
      * Display the user's transactions corresponding to a currency in order to sell them.
      */
     public function sell(Currency $currency)
-   { //    user logged
+    { //    user logged
         $transactions = Auth::user()
             ->transactions()
             ->where([
@@ -111,7 +113,7 @@ class TransactionController extends Controller
     public function store(Request $request, API $api)
     {   // Get form inputs data
         $attributes = $request->all();
-         // Get user's id to insert it
+        // Get user's id to insert it
         $attributes['user_id'] = Auth::id();
         // Get current datetime
         $attributes['purchase_date'] = Carbon::now()->toDateTimeString();

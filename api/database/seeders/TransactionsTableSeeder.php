@@ -1,10 +1,12 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Support\Arr;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 class TransactionsTableSeeder extends Seeder
 {
     /**

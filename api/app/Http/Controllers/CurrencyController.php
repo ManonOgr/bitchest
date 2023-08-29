@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Currency;
 use App\Models\API;
 
@@ -27,11 +28,11 @@ class CurrencyController extends Controller
 
         return response()->json($currencies);
     }
-     public function index()
-     {
-         $names = Currency::pluck('name');
-         return response()->json($names);
-     }
+    public function index()
+    {
+        $names = Currency::pluck('name');
+        return response()->json($names);
+    }
 
     /**
      * Display a currency's.

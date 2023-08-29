@@ -31,7 +31,6 @@
   </v-navigation-drawer>
 </template>
 
-
 <script setup>
 import axios from "axios";
 import router from "@/routers";

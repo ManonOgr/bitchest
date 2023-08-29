@@ -82,8 +82,6 @@ export default {
 </script>
 
 <style>
-
-<style>
 html {
   height: 100%;
 }

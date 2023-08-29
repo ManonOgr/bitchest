@@ -3,7 +3,7 @@
     <v-main>
       <v-container>
         <v-card>
-          <v-card-title>Informations Admin</v-card-title>
+          <v-card-title>Informations Admin : {{ prenom }} {{ nom }}</v-card-title>
           <v-card-text>
             <p><strong>Nom :</strong> {{ nom }}</p>
             <p><strong>Prénom :</strong> {{ prenom }}</p>
@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -29,35 +27,11 @@ export default {
     };
   },
   mounted() {
-    try {
-      axios
-        .post(
-          "http://127.0.0.1:8000/api/login",
-          {
-            email: 'admin@admin.com',
-              password: 'Admin',
-          },
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        )
-        .then((res) => {
-          const userData = res.data.user; // Récupérer les données utilisateur depuis la réponse
-          
-          this.nom = userData.last_name;
-          this.prenom = userData.first_name;
-          this.email = userData.email;
-          this.status = userData.status;
-        });
-
-      // En cas d'erreur de connexion
-    } catch (error) {
-      console.log(error);
-    }
+    // Assume you have stored user data in a Vuex store or similar
+    this.nom = this.$store.state.userData.last_name;
+    this.prenom = this.$store.state.userData.first_name;
+    this.email = this.$store.state.userData.email;
+    this.status = this.$store.state.userData.status;
   },
 };
 </script>

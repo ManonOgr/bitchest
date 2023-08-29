@@ -1,54 +1,3 @@
-<script>
-import router from "@/routers";
-import axios from "axios";
-
-//function for login
-export default {
-  data() {
-    return {
-      form: {
-        email: "",
-        password: "",
-      },
-    };
-  },
-  methods: {
-    formSubmit() {
-      try {
-        axios
-          .post(
-            "http://127.0.0.1:8000/api/login",
-            {
-              email: this.form.email,
-              password: this.form.password,
-            },
-            {
-              // withCredentials: true,
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-              },
-            }
-          )
-          .then((res) => {
-            console.log(res);
-            if (res.data.user.status === "client") {
-              router.push("/dashboardclient");
-            } else if (res.data.user.status === "admin") {
-              router.push("/dashboardadmin");
-            }
-          });
-
-        //unable to connect
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-};
-</script>
-
 <template>
   <div class="login-box">
     <img
@@ -81,6 +30,58 @@ export default {
     </form>
   </div>
 </template>
+
+<script>
+import router from "@/routers";
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      form: {
+        email: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    async formSubmit() {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/login",
+          {
+            email: this.form.email,
+            password: this.form.password,
+          },
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const userData = response.data.user;
+        // Store user data in Vuex or other suitable state management
+        this.$store.commit('setUserData', userData);
+
+        if (userData.status === "client") {
+          router.push("/dashboardclient");
+        } else if (userData.status === "admin") {
+          router.push("/dashboardadmin");
+        }
+      } catch (error) {
+        console.log("Erreur lors de la requête : ", error);
+        if (error.response && error.response.data && error.response.data.errors) {
+          console.log("Erreurs de validation : ", error.response.data.errors);
+        }
+      }
+    },
+  },
+};
+</script>
+
+<style>
 
 <style>
 html {
@@ -154,4 +155,5 @@ button {
   width: 150px;
   height: 30px;
 }
+
 </style>

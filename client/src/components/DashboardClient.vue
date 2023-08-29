@@ -17,50 +17,25 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
       nom: '',
       prenom: '',
-      email: ''
+      email: '',
+      status:''
     };
   },
   mounted() {
-    try {
-      axios
-        .post(
-          "http://127.0.0.1:8000/api/login",
-          {
-            email: 'quentinleroy@example.com',
-              password: 'QuentinL',
-          },
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        )
-        .then((res) => {
-          const userData = res.data.user; // Récupérer les données utilisateur depuis la réponse
-          
-          this.nom = userData.last_name;
-          this.prenom = userData.first_name;
-          this.email = userData.email;
-          this.status = userData.status;
-        });
-
-      // En cas d'erreur de connexion
-    } catch (error) {
-      console.log(error);
-    }
+    // Assume you have stored user data in a Vuex store or similar
+    this.nom = this.$store.state.userData.last_name;
+    this.prenom = this.$store.state.userData.first_name;
+    this.email = this.$store.state.userData.email;
+    this.status = this.$store.state.userData.status;
   },
 };
 </script>
 
 <style>
-/* Vos styles ici */
+
 </style>

@@ -24,7 +24,8 @@ export default {
     return {
       nom: '',
       prenom: '',
-      email: ''
+      email: '',
+      status:''
     };
   },
   mounted() {

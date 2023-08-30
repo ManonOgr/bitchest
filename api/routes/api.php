@@ -60,3 +60,6 @@ Route::get('/currencies/names', [CurrencyController::class, 'index']);
 
 // Route to get status
 Route::get('/status', [TransactionController::class, 'status']);
+
+// Route to retrieve transactions for a specific user
+Route::get('user-transactions/{userId}', [TransactionController::class, 'getUserTransactions']);

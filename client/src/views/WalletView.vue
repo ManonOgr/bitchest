@@ -1,60 +1,60 @@
 <template>
-    <v-app>
-      <sidebar-nav-client></sidebar-nav-client>
-  
-      <v-app-bar app>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>Portefeuille</v-toolbar-title>
-      </v-app-bar>
-  
-      <v-main>
-        <v-container>
-    
-  <div>
-    <div class="container-tab">
-      <v-table height="300px">
-      <thead>
-        <tr>
-          <th>Mes cryptos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>liste des cryptos d'un client</td>
-        </tr>
-      </tbody>
-    </v-table>
-    </div>
+  <!-- Vue app container -->
+  <v-app>
+    <!-- Client-specific sidebar navigation component -->
+    <sidebar-nav-client></sidebar-nav-client>
 
-  </div>
+    <!-- App bar for the application -->
+    <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <!-- Title for the app bar -->
+      <v-toolbar-title>Portefeuille</v-toolbar-title>
+    </v-app-bar>
 
-          <p>Contenu Page Wallet</p>
-        </v-container>
-      </v-main>
-    </v-app>
-  </template>
-  
-  <script>
-  import SidebarNavClient from '@/components/SideBarNavClient.vue';
-  
-  export default {
-    components: {
-      SidebarNavClient, 
-    },
-    data() {
-      return {
-        drawer: false
-      };
-    }
-  };
-  
-  
-  
-  </script>
-  
-  
-  
-  <style>
+    <!-- Main content area -->
+    <v-main>
+      <v-container>
+        <div>
+          <div class="container-tab">
+            <!-- Table displaying user's crypto data -->
+            <v-table height="300px">
+              <thead>
+                <tr>
+                  <th>Mes Cryptos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>List of cryptocurrencies for a client</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
+        </div>
+
+        <p>Wallet Page Content</p>
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
+
+<script>
+import SidebarNavClient from '@/components/SideBarNavClient.vue'; // Importing the Client-specific SidebarNav component
+
+export default {
+  components: {
+    SidebarNavClient, // Registering the Client-specific SidebarNav component
+  },
+  data() {
+    return {
+      drawer: false, // Data property for controlling the sidebar drawer state
+    };
+  },
+};
+</script>
+
+<style>
 .title {
   display: flex;
   align-items: center;
@@ -62,18 +62,10 @@
   margin-top: 50px;
 }
 
-.container-tab{
+.container-tab {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 50px;
 }
 </style>
-  
-  
-  
-  
-  
-  
-  
-  

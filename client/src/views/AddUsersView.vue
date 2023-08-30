@@ -1,48 +1,44 @@
 <template>
-  
-    <v-container class="mt-10 add-box">
-    <h1 class="text-h5">Ajouter un Utilisateur</h1>
-    <v-form @submit.prevent="addUser" class="mt-10">
+  <!-- Container for adding a user -->
+  <v-container class="mt-10 add-box">
+    <h1 class="text-h5">Ajouter un utilisateur</h1> <!-- Heading -->
+    <v-form @submit.prevent="addUser" class="mt-10"> <!-- Form to submit user data -->
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field v-model="userData.first_name" label="Prénom" required></v-text-field>
+          <v-text-field v-model="userData.first_name" label="Prénom" required></v-text-field> <!-- Input field for first name -->
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field v-model="userData.last_name" label="Nom de Famille" required></v-text-field>
+          <v-text-field v-model="userData.last_name" label="Nom" required></v-text-field> <!-- Input field for last name -->
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field v-model="userData.email" label="Email" type="email" required></v-text-field>
+          <v-text-field v-model="userData.email" label="Email" type="email" required></v-text-field> <!-- Input field for email -->
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field v-model="userData.password" label="Mot de Passe" type="password" required></v-text-field>
+          <v-text-field v-model="userData.password" label="Password" type="password" required></v-text-field> <!-- Input field for password -->
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="6">
-         
-          <select id="status" v-model="userData.status" required>
-            <option value="" disabled selected>Choisissez un statut</option>
+          <select id="status" v-model="userData.status" required> <!-- Dropdown for selecting status -->
+            <option value="" disabled selected>Selectionne un status</option>
             <option value="client">Client</option>
             <option value="admin">Admin</option>
           </select>
-   
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-btn @click="addUser" depressed>Ajouter</v-btn>
+          <v-btn @click="addUser" depressed>Ajouter</v-btn> <!-- Button to add user -->
         </v-col>
       </v-row>
     </v-form>
   </v-container>
-
-
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'; // Importing axios for making API requests
 
 export default {
   data() {
@@ -57,15 +53,15 @@ export default {
     };
   },
   methods: {
-    addUser() {
-      axios.post('/api/users', this.userData)
+    addUser() { // Method to add a user
+      axios.post('/api/users', this.userData) // Sending user data to API endpoint
         .then(response => {
-          console.log(response.data.message);
-          // Rediriger vers la page 'Customers' après succès
+          console.log(response.data.message); // Logging success message from API response
+          // Redirect to the 'Customers' page on success
           this.$router.push('/customers'); 
         })
         .catch(error => {
-          console.error(error);
+          console.error(error); // Logging any errors that occur during the API request
         });
     }
   }
@@ -80,8 +76,7 @@ export default {
   border-radius: 10px;
 }
 
-/* Style de base pour le select */
-/* Style de base pour le select */
+/* style for the select dropdown */
 #status {
   font-size: 16px;
   padding: 10px;

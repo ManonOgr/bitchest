@@ -7,20 +7,21 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
+    // Store a new user
     public function store(Request $request)
     {
+        // Validate incoming request data
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'status' => 'required|in:client,admin',
+            'email' => 'required|email|unique:users', // Ensure email is unique in the 'users' table
+            'password' => 'required|min:6', // Password must be at least 6 characters long
+            'status' => 'required|in:client,admin', // Status must be 'client' or 'admin'
         ], [
-            'email.unique' => 'Cet e-mail est déjà utilisé par un autre utilisateur.',
-            // Ajoutez des messages d'erreur pour d'autres validations si nécessaire
+            'email.unique' => 'This email is already used by another user.', // Custom error message for unique email validation
         ]);
 
+        // Create a new User instance and populate its attributes
         $user = new User();
         $user->first_name = $validatedData['first_name'];
         $user->last_name = $validatedData['last_name'];
@@ -32,6 +33,7 @@ class UserController extends Controller
         return response()->json(['message' => 'User added successfully']);
     }
 
+    // Get all users
     public function getUsers()
     {
         $users = User::select('id', 'first_name', 'last_name', 'email', 'status')->get();
@@ -39,22 +41,26 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    // Update user details
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
+        // Validate incoming request data
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id, // Ensure email is unique, excluding the current user's email
             'status' => 'required|in:client,admin',
         ]);
 
+        // Update user attributes with validated data
         $user->update($validatedData);
 
         return response()->json(['message' => 'User updated successfully']);
     }
 
+    // Delete a user
     public function destroy($id)
     {
         $user = User::findOrFail($id);

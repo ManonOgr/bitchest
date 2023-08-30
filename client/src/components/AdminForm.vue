@@ -1,4 +1,5 @@
 <template>
+  <!-- Login form template -->
   <div class="login-box">
     <img
       src="../assets/bitchest_logo.png"
@@ -6,6 +7,7 @@
       style="max-width: 100%; height: auto"
     />
     <form>
+      <!-- Email input -->
       <div class="user-box">
         <input
           type="email"
@@ -16,6 +18,7 @@
         />
         <label></label>
       </div>
+      <!-- Password input -->
       <div class="user-box">
         <input
           type="password"
@@ -26,14 +29,15 @@
         />
         <label></label>
       </div>
+      <!-- Login button -->
       <v-btn variant="tonal" @click.prevent="formSubmit">Login</v-btn>
     </form>
   </div>
 </template>
 
 <script>
-import router from "@/routers";
-import axios from "axios";
+import router from "@/routers"; // Import the router instance
+import axios from "axios"; // Import the Axios library for making HTTP requests
 
 export default {
   data() {
@@ -48,7 +52,7 @@ export default {
     async formSubmit() {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/login",
+          "http://127.0.0.1:8000/api/login", // API endpoint for user login
           {
             email: this.form.email,
             password: this.form.password,
@@ -66,18 +70,18 @@ export default {
         this.$store.commit("setUserData", userData);
 
         if (userData.status === "client") {
-          router.push("/dashboardclient");
+          router.push("/dashboardclient"); // Redirect to client dashboard
         } else if (userData.status === "admin") {
-          router.push("/dashboardadmin");
+          router.push("/dashboardadmin"); // Redirect to admin dashboard
         }
       } catch (error) {
-        console.log("Erreur lors de la requête : ", error);
+        console.log("Error during request: ", error);
         if (
           error.response &&
           error.response.data &&
           error.response.data.errors
         ) {
-          console.log("Erreurs de validation : ", error.response.data.errors);
+          console.log("Validation errors: ", error.response.data.errors);
         }
       }
     },

@@ -1,7 +1,9 @@
 <template>
+  <!-- Container for the user update form -->
   <v-container class="mt-10 add-box">
-    <h1 class="headline">Modifier l'Utilisateur</h1>
+    <h1 class="headline">Modifier un utilisateur</h1>
     <v-form @submit.prevent="updateUser">
+      <!-- Input fields for user data -->
       <v-text-field
         v-model="userData.first_name"
         label="Prénom"
@@ -9,7 +11,7 @@
       ></v-text-field>
       <v-text-field
         v-model="userData.last_name"
-        label="Nom de Famille"
+        label="Nom"
         required
       ></v-text-field>
       <v-text-field
@@ -19,19 +21,21 @@
         required
       ></v-text-field>
       <div>
+        <!-- Dropdown for user status selection -->
         <select id="status" v-model="userData.status" required>
-          <option value="" disabled selected>Choisissez un statut</option>
+          <option value="" disabled selected>Selectionne un status</option>
           <option value="client">Client</option>
           <option value="admin">Admin</option>
         </select>
       </div>
-      <v-btn type="submit" depressed>Enregistrer</v-btn>
+      <!-- Button to submit form data -->
+      <v-btn type="submit" depressed>Modifier</v-btn>
     </v-form>
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"; // Importing axios for making API requests
 
 export default {
   data() {
@@ -45,13 +49,13 @@ export default {
     };
   },
   created() {
-    this.fetchUser(); // Charge les données de l'utilisateur existant
+    this.fetchUser(); // Load existing user data
   },
   methods: {
     fetchUser() {
-      const userId = this.$route.params.id; // Obtient l'ID de l'URL
+      const userId = this.$route.params.id; // Get ID from the URL
       axios
-        .get(`/api/users/${userId}`)
+        .get(`/api/users/${userId}`) // Fetch user data based on ID
         .then((response) => {
           this.userData = response.data;
         })
@@ -60,13 +64,13 @@ export default {
         });
     },
     updateUser() {
-      const userId = this.$route.params.id;
+      const userId = this.$route.params.id; // Get ID from the URL
       axios
-        .put(`/api/users/${userId}`, this.userData)
+        .put(`/api/users/${userId}`, this.userData) // Update user data using PUT request
         .then((response) => {
           console.log(response.data.message);
-          // Redirige vers la liste des utilisateurs après succès
-          this.$router.push("/customers"); // Assurez-vous que le chemin est correct
+          // Redirect to the users list upon success
+          this.$router.push("/customers"); // Make sure the path is correct
         })
         .catch((error) => {
           console.error(error);

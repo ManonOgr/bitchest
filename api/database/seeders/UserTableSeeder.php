@@ -27,6 +27,7 @@ class UserTableSeeder extends Seeder
                 'status' => 'admin',
                 'password' => Hash::make('Admin'),
             ],
+            //create client
             [
                 'first_name' => 'Quentin',
                 'last_name' => 'Leroy',

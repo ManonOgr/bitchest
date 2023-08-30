@@ -1,16 +1,22 @@
 <template>
+  <!-- Vue app container -->
   <v-app>
+    <!-- Sidebar navigation component -->
     <side-bar-nav></side-bar-nav>
 
+    <!-- App bar for the application -->
     <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Gestion des clients</v-toolbar-title>
+      <!-- Title for the app bar -->
+      <v-toolbar-title>Gestion Client</v-toolbar-title>
     </v-app-bar>
 
+    <!-- Main content area -->
     <v-main>
       <v-container>
         <div class="pa-2">
-          <h1 class="headline">Liste des Utilisateurs</h1>
+          <h1 class="headline">Liste des utilisateurs</h1>
           <v-responsive>
             <router-link to="/add-user">
               <v-btn color="success">Ajouter</v-btn>
@@ -22,12 +28,13 @@
                   <th class="text-left">Prénom</th>
                   <th class="text-left">Nom</th>
                   <th class="text-left email-column">Email</th>
-                  <th class="text-left">Statut</th>
+                  <th class="text-left">Status</th>
                   <th class="text-left">Supprimer</th>
                   <th class="text-left">Modifier</th>
                 </tr>
               </thead>
               <tbody>
+                <!-- Loop through users and display their data -->
                 <tr v-for="user in users" :key="user.id">
                   <td class="text-left">{{ user.id }}</td>
                   <td class="text-left">{{ user.first_name }}</td>
@@ -39,8 +46,7 @@
                       @click="deleteUser(user.id)"
                       class="mt-2"
                       color="error"
-                      >Supprimer</v-btn
-                    >
+                    >Supprimer</v-btn>
                   </td>
                   <td class="text-left">
                     <v-btn
@@ -51,8 +57,7 @@
                           params: { id: user.id },
                         })
                       "
-                      >Modifier</v-btn
-                    >
+                    >Modifier</v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -65,24 +70,24 @@
 </template>
 
 <script>
-import SideBarNav from "@/components/SideBarNav.vue";
-import axios from "axios";
+import SideBarNav from "@/components/SideBarNav.vue"; // Importing the SidebarNav component
+import axios from "axios"; // Importing axios for making API requests
 
 export default {
   data() {
     return {
-      users: [],
+      users: [], // Array to hold user data
     };
   },
   mounted() {
-    this.fetchUsers();
+    this.fetchUsers(); // Fetch users data when the component is mounted
   },
   methods: {
     fetchUsers() {
       axios
-        .get("/api/users")
+        .get("/api/users") // Fetching users data from API endpoint
         .then((response) => {
-          this.users = response.data;
+          this.users = response.data; // Assigning fetched data to the users array
         })
         .catch((error) => {
           console.error(error);
@@ -90,8 +95,8 @@ export default {
     },
     async deleteUser(id) {
       try {
-        await axios.delete(`/api/users/${id}`);
-        // Remove the user from the list only after successful deletion
+        await axios.delete(`/api/users/${id}`); // Sending a delete request to API endpoint
+        // Remove the user from the list after successful deletion
         this.users = this.users.filter((user) => user.id !== id);
       } catch (error) {
         console.error(error);
@@ -99,7 +104,7 @@ export default {
     },
   },
 
-  components: { SideBarNav },
+  components: { SideBarNav }, // Registering the SidebarNav component
 };
 </script>
 

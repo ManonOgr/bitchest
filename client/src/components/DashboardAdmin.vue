@@ -1,16 +1,17 @@
 <template>
+  <!-- Vue application -->
   <v-app>
     <v-main>
       <v-container>
         <v-card>
-          <v-card-title
-            >Informations Admin : {{ prenom }} {{ nom }}</v-card-title
-          >
+          <!-- Card title showing Admin Information -->
+          <v-card-title>Information: {{ firstName }} {{ lastName }}</v-card-title>
           <v-card-text>
-            <p><strong>Nom :</strong> {{ nom }}</p>
-            <p><strong>Prénom :</strong> {{ prenom }}</p>
-            <p><strong>E-mail :</strong> {{ email }}</p>
-            <p><strong>Status :</strong> {{ status }}</p>
+            <!-- Display user details -->
+            <p><strong>Nom:</strong> {{ lastName }}</p>
+            <p><strong>Prénom:</strong> {{ firstName }}</p>
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Status:</strong> {{ userStatus }}</p>
           </v-card-text>
         </v-card>
       </v-container>
@@ -22,22 +23,18 @@
 export default {
   data() {
     return {
-      nom: "",
-      prenom: "",
-      email: "",
-      status: "",
+      lastName: "", // Initialize last name
+      firstName: "", // Initialize first name
+      email: "", // Initialize email
+      userStatus: "", // Initialize user status
     };
   },
   mounted() {
     // Assume you have stored user data in a Vuex store or similar
-    this.nom = this.$store.state.userData.last_name;
-    this.prenom = this.$store.state.userData.first_name;
-    this.email = this.$store.state.userData.email;
-    this.status = this.$store.state.userData.status;
+    this.lastName = this.$store.state.userData.last_name; // Set last name from stored data
+    this.firstName = this.$store.state.userData.first_name; // Set first name from stored data
+    this.email = this.$store.state.userData.email; // Set email from stored data
+    this.userStatus = this.$store.state.userData.status; // Set user status from stored data
   },
 };
 </script>
-
-<style>
-/* Vos styles ici */
-</style>

@@ -10,15 +10,17 @@
 
     <v-main>
       <v-container>
-        <h1>List of My Cryptocurrencies</h1>
+        <h1>Liste de mes Cryptos</h1>
+        <h2>Solde Total en Euros: {{ formattedTotalBalanceEuros }}</h2>
         <v-responsive>
           <v-table height="300px">
             <thead>
               <tr>
                 <th class="text-left id-column">ID Crypto</th>
-                <th class="text-left">Nom Crypto</th>
+                <th class="text-left">Nom de la crypto</th>
                 <th class="text-left">Quantité</th>
                 <th class="text-left">Date d'achat</th>
+                <th class="text-left">Prix d'achat</th>
               </tr>
             </thead>
             <tbody>
@@ -28,6 +30,7 @@
                 <td class="text-left">{{ transaction.currency_name }}</td>
                 <td class="text-left">{{ transaction.quantity }}</td>
                 <td class="text-left">{{ transaction.purchase_date }}</td>
+                <td class="text-left">{{ transaction.purchase_price }}</td>
               </tr>
             </tbody>
           </v-table>
@@ -46,23 +49,60 @@ export default {
   data() {
     return {
       userTransactions: [], // Initialize an empty array to store user transactions
+      totalBalanceEuros: 0, // Initialize the total balance in euros
     };
+  },
+  computed: {
+    formattedTotalBalanceEuros() {
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(this.totalBalanceEuros);
+    },
   },
   async created() {
     try {
       // Check if user data exists in the store
       if (this.$store.state.userData) {
-        const userId = this.$store.state.userData.id; // Extract the user's ID from the store
+        const userId = this.$store.state.userData.id;
         const response = await axios.get(
           `http://127.0.0.1:8000/api/user-transactions/${userId}`
-        ); // Make an API request to fetch user transactions based on the user's ID
-        this.userTransactions = response.data.transactions; // Store the fetched transactions in the userTransactions array
+        );
+        this.userTransactions = response.data.transactions;
+
+        // Calculate the total balance in euros
+        this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
       } else {
         console.log("User data is not available yet.");
       }
     } catch (error) {
-      console.log("Error during request: ", error); // Log an error if the API request encounters an issue
+      console.log("Error during request: ", error);
     }
+  },
+  methods: {
+    async calculateTotalBalanceEuros() {
+    try {
+      let totalBalanceEuros = 0;
+
+      for (const transaction of this.userTransactions) {
+        console.log("Transaction:", transaction);
+        console.log("Quantity:", transaction.quantity);
+        console.log("Purchase Price:", transaction.purchase_price);
+
+        const transactionTotal = transaction.quantity * transaction.purchase_price;
+        console.log("Transaction Total:", transactionTotal);
+
+        totalBalanceEuros += transactionTotal;
+      }
+
+      console.log("Total Balance Euros:", totalBalanceEuros);
+
+      return totalBalanceEuros;
+    } catch (error) {
+      console.log("Error calculating total balance: ", error);
+      return 0;
+    }
+  },
   },
   components: { SideBarNavClient }, // Use the imported sidebar navigation component
 };
@@ -82,4 +122,5 @@ export default {
   justify-content: space-between;
   margin-top: 50px;
 }
+
 </style>

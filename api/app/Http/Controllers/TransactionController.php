@@ -18,15 +18,15 @@ class TransactionController extends Controller
      * @return void
      */
 
-    public function getUserTransactions($userId)
-    {
-        $userTransactions = Transaction::where('user_id', $userId)
-            ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
-            ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date')
-            ->get();
+     public function getUserTransactions($userId)
+     {
+         $userTransactions = Transaction::where('user_id', $userId)
+             ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
+             ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date', 'transactions.purchase_price') // Ajoutez le champ purchase_price ici
+             ->get();
 
-        return response()->json(['transactions' => $userTransactions]);
-    }
+         return response()->json(['transactions' => $userTransactions]);
+     }
 
     public function getTransaction()
     {

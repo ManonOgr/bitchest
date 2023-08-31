@@ -43,7 +43,7 @@
                   <td class="text-left">{{ user.status }}</td>
                   <td class="text-left">
                     <v-btn
-                      @click="deleteUser(user.id)"
+                      @click="openDeleteDialog(user)"
                       class="mt-2"
                       color="error"
                     >Supprimer</v-btn>
@@ -66,45 +66,68 @@
         </div>
       </v-container>
     </v-main>
-  </v-app>
+
+
+  <!-- Dialog component for delete confirmation -->
+  <v-dialog v-model="deleteDialog" max-width="400">
+    <v-card>
+      <v-card-title class="headline">Confirmation</v-card-title>
+      <v-card-text>
+        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="error" @click="deleteUserConfirmed">Supprimer</v-btn>
+        <v-btn text @click="deleteDialog = false">Annuler</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</v-app>
 </template>
 
 <script>
-import SideBarNav from "@/components/SideBarNav.vue"; // Importing the SidebarNav component
-import axios from "axios"; // Importing axios for making API requests
+import SideBarNav from "@/components/SideBarNav.vue";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      users: [], // Array to hold user data
+      users: [],
+      deleteDialog: false,
+      userToDelete: null,
     };
   },
   mounted() {
-    this.fetchUsers(); // Fetch users data when the component is mounted
+    this.fetchUsers();
   },
   methods: {
     fetchUsers() {
       axios
-        .get("/api/users") // Fetching users data from API endpoint
+        .get("/api/users")
         .then((response) => {
-          this.users = response.data; // Assigning fetched data to the users array
+          this.users = response.data;
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    async deleteUser(id) {
-      try {
-        await axios.delete(`/api/users/${id}`); // Sending a delete request to API endpoint
-        // Remove the user from the list after successful deletion
-        this.users = this.users.filter((user) => user.id !== id);
-      } catch (error) {
-        console.error(error);
+    openDeleteDialog(user) {
+      this.userToDelete = user;
+      this.deleteDialog = true;
+    },
+    async deleteUserConfirmed() {
+      if (this.userToDelete) {
+        const id = this.userToDelete.id;
+        try {
+          await axios.delete(`/api/users/${id}`);
+          this.users = this.users.filter((user) => user.id !== id);
+          this.deleteDialog = false;
+        } catch (error) {
+          console.error(error);
+        }
       }
     },
   },
-
-  components: { SideBarNav }, // Registering the SidebarNav component
+  components: { SideBarNav },
 };
 </script>
 
@@ -129,7 +152,7 @@ export default {
 }
 
 .id-column {
-  width: 5%; /* Adjust the width as needed */
+  width: 5%;
 }
 
 .pa-2 {

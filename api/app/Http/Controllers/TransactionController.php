@@ -22,7 +22,7 @@ class TransactionController extends Controller
      {
          $userTransactions = Transaction::where('user_id', $userId)
              ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
-             ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date', 'transactions.purchase_price') // Ajoutez le champ purchase_price ici
+             ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date', 'transactions.purchase_price','transactions.selling_price' ) // Ajoutez le champ purchase_price ici
              ->get();
 
          return response()->json(['transactions' => $userTransactions]);
@@ -37,21 +37,35 @@ class TransactionController extends Controller
     public function sellCrypto($id)
 {
     try {
-        // Récupérez la transaction par son ID
+        // Retrieve the transaction by its ID
         $transaction = Transaction::find($id);
 
         if (!$transaction) {
             return response()->json(['message' => 'Transaction not found'], 404);
         }
 
-        // Votre logique de vente ici, par exemple, supprimer la transaction
-        $transaction->delete();
+        // Check if the selling_price is available
+        if (is_null($transaction->selling_price)) {
+            return response()->json(['message' => 'Prix de vente non disponible pour cette transaction'], 404);
+        }
+
+        // Your selling logic here, you can directly use $transaction->selling_price as the selling price
+
+        // Save the updated transaction (if you're updating other properties as well)
+        // $transaction->save();
+
+        // Delete the transaction if needed
+        $transaction->delete(); // Uncomment this line if you want to delete the transaction
 
         return response()->json(['message' => 'Crypto sold successfully'], 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Error selling crypto'], 500);
     }
 }
+
+
+
+
 
 
     public function __construct(Request $request)

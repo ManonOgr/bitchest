@@ -11,7 +11,8 @@
     <v-main>
       <v-container>
         <h1>Liste de mes Cryptos</h1>
-        <h2>Solde Total en Euros: {{ formattedTotalBalanceEuros }}</h2>
+        <h2>Solde de mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
+        <h2>Solde de mon compte en euros : </h2>
         <v-responsive>
           <v-table height="300px">
             <thead>
@@ -21,6 +22,8 @@
                 <th class="text-left">Quantité</th>
                 <th class="text-left">Date d'achat</th>
                 <th class="text-left">Prix d'achat</th>
+                <th class="text-left">Prix de vente</th>
+                <th class="text-left">Actions</th> <!-- Ajout de la colonne d'actions -->
               </tr>
             </thead>
             <tbody>
@@ -31,6 +34,10 @@
                 <td class="text-left">{{ transaction.quantity }}</td>
                 <td class="text-left">{{ transaction.purchase_date }}</td>
                 <td class="text-left">{{ transaction.purchase_price }}</td>
+                <td class="text-left">{{ transaction.selling_price }}</td>
+                <td class="text-left">
+                  <v-btn @click="sellCrypto(transaction)">Vendre</v-btn>
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -81,28 +88,42 @@ export default {
   },
   methods: {
     async calculateTotalBalanceEuros() {
-    try {
-      let totalBalanceEuros = 0;
+      try {
+        let totalBalanceEuros = 0;
 
-      for (const transaction of this.userTransactions) {
-        console.log("Transaction:", transaction);
-        console.log("Quantity:", transaction.quantity);
-        console.log("Purchase Price:", transaction.purchase_price);
+        for (const transaction of this.userTransactions) {
+          const transactionTotal = transaction.quantity * transaction.purchase_price;
+          totalBalanceEuros += transactionTotal;
+        }
 
-        const transactionTotal = transaction.quantity * transaction.purchase_price;
-        console.log("Transaction Total:", transactionTotal);
-
-        totalBalanceEuros += transactionTotal;
+        return totalBalanceEuros;
+      } catch (error) {
+        console.log("Error calculating total balance: ", error);
+        return 0;
       }
-
-      console.log("Total Balance Euros:", totalBalanceEuros);
-
-      return totalBalanceEuros;
-    } catch (error) {
-      console.log("Error calculating total balance: ", error);
-      return 0;
+    },
+    async sellCrypto(transaction) {
+  try {
+    // Supprimez la crypto du portefeuille de l'utilisateur
+    const index = this.userTransactions.findIndex((t) => t.id === transaction.id);
+    if (index !== -1) {
+      this.userTransactions.splice(index, 1);
     }
-  },
+
+    // Déduisez le purchase_price de la valeur de formattedTotalBalanceEuros
+    this.totalBalanceEuros -= transaction.quantity * transaction.purchase_price;
+
+    // Mettez à jour la valeur de formattedTotalBalanceEuros
+    // Vous pouvez rappeler this.calculateTotalBalanceEuros() si nécessaire.
+
+    // Envoyez une demande au backend pour mettre à jour les données de l'utilisateur
+    await this.updateUserTransactions(); // À implémenter
+
+  } catch (error) {
+    console.log("Error while selling crypto: ", error);
+  }
+},
+
   },
   components: { SideBarNavClient }, // Use the imported sidebar navigation component
 };
@@ -122,5 +143,4 @@ export default {
   justify-content: space-between;
   margin-top: 50px;
 }
-
 </style>

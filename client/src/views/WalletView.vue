@@ -10,9 +10,9 @@
 
     <v-main>
       <v-container>
-        <h1>Liste de mes Cryptos</h1>
-        <h2>Solde de mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
-        <h2>Solde de mon compte en euros : </h2>
+        <h1>List of My Cryptos</h1>
+        <h2>Total Balance in Euros: {{ formattedTotalBalanceEuros }}</h2>
+        <h2>My Account Balance: {{ formattedUserBalance }}</h2>
         <v-responsive>
           <v-table height="300px">
             <thead>
@@ -27,16 +27,18 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Loop through user's transactions and display them -->
+<!-- Loop through user's transactions and display them -->
               <tr v-for="transaction in userTransactions" :key="transaction.id">
                 <td class="text-left">{{ transaction.currency_id }}</td>
                 <td class="text-left">{{ transaction.currency_name }}</td>
                 <td class="text-left">{{ transaction.quantity }}</td>
                 <td class="text-left">{{ transaction.purchase_date }}</td>
                 <td class="text-left">{{ transaction.purchase_price }}</td>
-                <td class="text-left">{{ transaction.selling_price }}</td>
+<td class="text-left">{{ transaction.selling_price }}</td>
                 <td class="text-left">
-                  <v-btn @click="sellCrypto(transaction)">Vendre</v-btn>
+                  <v-btn color="primary" @click="sellCrypto(transaction)">
+                    Sell
+                  </v-btn>
                 </td>
               </tr>
             </tbody>
@@ -66,10 +68,19 @@ export default {
         currency: "EUR",
       }).format(this.totalBalanceEuros);
     },
+    formattedUserBalance() {
+      if (this.$store.state.userData) {
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "EUR",
+        }).format(this.$store.state.userData.euro_balance);
+      }
+      return '';
+    },
   },
   async created() {
     try {
-      // Check if user data exists in the store
+// Check if user data exists in the store
       if (this.$store.state.userData) {
         const userId = this.$store.state.userData.id;
         const response = await axios.get(
@@ -90,12 +101,11 @@ export default {
     async calculateTotalBalanceEuros() {
       try {
         let totalBalanceEuros = 0;
-
         for (const transaction of this.userTransactions) {
-          const transactionTotal = transaction.quantity * transaction.purchase_price;
+          const transactionTotal =
+            transaction.quantity * transaction.purchase_price;
           totalBalanceEuros += transactionTotal;
         }
-
         return totalBalanceEuros;
       } catch (error) {
         console.log("Error calculating total balance: ", error);
@@ -103,29 +113,30 @@ export default {
       }
     },
     async sellCrypto(transaction) {
-  try {
-    // Supprimez la crypto du portefeuille de l'utilisateur
-    const index = this.userTransactions.findIndex((t) => t.id === transaction.id);
-    if (index !== -1) {
-      this.userTransactions.splice(index, 1);
-    }
+      try {
+        // Supprimez la crypto du portefeuille de l'utilisateur
+        const index = this.userTransactions.findIndex((t) => t.id === transaction.id);
+        if (index !== -1) {
+          this.userTransactions.splice(index, 1);
+        }
 
-    // Déduisez le purchase_price de la valeur de formattedTotalBalanceEuros
+        // Déduisez le purchase_price de la valeur de formattedTotalBalanceEuros
     this.totalBalanceEuros -= transaction.quantity * transaction.purchase_price;
 
-    // Mettez à jour la valeur de formattedTotalBalanceEuros
+          // Mettez à jour la valeur de formattedTotalBalanceEuros
     // Vous pouvez rappeler this.calculateTotalBalanceEuros() si nécessaire.
 
-    // Envoyez une demande au backend pour mettre à jour les données de l'utilisateur
-    await this.updateUserTransactions(); // À implémenter
+        // Recalculez le solde total en euros
+        this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
 
-  } catch (error) {
-    console.log("Error while selling crypto: ", error);
-  }
-},
-
+        // Affichez un message de réussite (vous pouvez le remplacer par votre propre mécanisme de notification)
+        console.log(`Sold cryptocurrency: ${transaction.currency_name}`);
+      } catch (error) {
+        console.log("Error during selling operation: ", error);
+      }
+    },
   },
-  components: { SideBarNavClient }, // Use the imported sidebar navigation component
+  components: { SideBarNavClient },
 };
 </script>
 

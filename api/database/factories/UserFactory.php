@@ -29,6 +29,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
+            'euro_balance' => $this->faker->randomFloat(2, 1000, 10000),
             // only Customer
             'status' => $this->faker->randomDigit <= 0 ?: 'client',
             'remember_token' => Str::random(10)

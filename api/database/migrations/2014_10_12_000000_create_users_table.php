@@ -23,7 +23,9 @@ class CreateUsersTable extends Migration
             $table->enum("status", ["admin", "client"]);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
+            $table->unsignedDecimal('euro_balance', 15, 2)->default(0);
             $table->timestamps();
+
         });
     }
 

@@ -34,6 +34,26 @@ class TransactionController extends Controller
         return response()->json($currencies);
     }
 
+    public function sellCrypto($id)
+{
+    try {
+        // Récupérez la transaction par son ID
+        $transaction = Transaction::find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        // Votre logique de vente ici, par exemple, supprimer la transaction
+        $transaction->delete();
+
+        return response()->json(['message' => 'Crypto sold successfully'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error selling crypto'], 500);
+    }
+}
+
+
     public function __construct(Request $request)
     {
         if (Str::contains($request->path(), 'create')) {

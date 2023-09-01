@@ -36,10 +36,17 @@ class UserController extends Controller
     // Get all users
     public function getUsers()
     {
-        $users = User::select('id', 'first_name', 'last_name', 'email', 'status')->get();
+        $users = User::select('id', 'first_name', 'last_name', 'email', 'status', 'euro_balance')->get();
 
         return response()->json($users);
     }
+
+    public function getUserById($id)
+{
+    $user = User::findOrFail($id);
+
+    return response()->json($user);
+}
 
     // Update user details
     public function update(Request $request, $id)

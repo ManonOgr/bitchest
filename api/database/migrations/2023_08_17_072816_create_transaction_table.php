@@ -24,10 +24,9 @@ return new class extends Migration
             $table->unsignedDecimal('quantity', 15, 6);
             $table->unsignedDecimal('purchase_price', 15, 10);
             $table->dateTime('purchase_date');
-            $table->boolean('sold')->default(0);
             $table->unsignedDecimal('selling_amount')->nullable();
-            $table->unsignedDecimal('selling_price', 15, 10)->nullable();
-            $table->dateTime('selling_date')->nullable();
+            $table->unsignedDecimal('selling_price', 15, 10);
+            $table->dateTime('selling_date');
         });
     }
 

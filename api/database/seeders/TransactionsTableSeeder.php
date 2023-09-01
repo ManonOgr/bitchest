@@ -29,15 +29,5 @@ class TransactionsTableSeeder extends Seeder
         // Fixed amount depending on the quantity of the purchase price
         DB::update("UPDATE `transactions` SET `amount`=`quantity`*`purchase_price`");
 
-        // Set the sale amount based on the quantity and the sale price
-        DB::update("UPDATE `transactions` SET `selling_amount`=`quantity`*`selling_price` WHERE `sold`=1");
-
-        // Set selling price and date to null if not sold
-        DB::table('transactions')
-            ->where('sold', false)
-            ->update([
-                'selling_price'    => null,
-                'selling_date'      => null
-            ]);
     }
 }

@@ -12,7 +12,7 @@
       <v-container>
         <h1>Liste de mes Cryptos</h1>
         <h2>Solde mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
-        <h2>Solde de mon compte en Euros: {{ formattedFakeAccountBalance }}</h2> <!-- Afficher la donnée fictive ici -->
+        <h2>Solde de mon compte en Euros: {{ formattedFakeAccountBalance }}</h2>
         <v-responsive>
           <v-table height="300px">
             <thead>
@@ -23,11 +23,10 @@
                 <th class="text-left">Date d'achat</th>
                 <th class="text-left">Prix d'achat</th>
                 <th class="text-left">Prix de vente</th>
-                <th class="text-left">Actions</th> <!-- Ajout de la colonne d'actions -->
+                <th class="text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Loop through user's transactions and display them -->
               <tr v-for="transaction in userTransactions" :key="transaction.id">
                 <td class="text-left">{{ transaction.currency_id }}</td>
                 <td class="text-left">{{ transaction.currency_name }}</td>
@@ -36,7 +35,7 @@
                 <td class="text-left">{{ transaction.purchase_price }}</td>
                 <td class="text-left">{{ transaction.selling_price }}</td>
                 <td class="text-left">
-                  <v-btn color="primary" @click="sellCrypto(transaction)">
+                  <v-btn color="primary" @click="confirmSellCrypto(transaction)">
                     Vendre
                   </v-btn>
                 </td>
@@ -46,11 +45,24 @@
         </v-responsive>
       </v-container>
     </v-main>
+
+    <!-- Boîte de dialogue de confirmation de vente -->
+    <v-dialog v-model="sellDialog" max-width="400px">
+      <v-card>
+        <v-card-title>Confirmation de la vente</v-card-title>
+        <v-card-text>
+          Êtes-vous sûr de vouloir vendre cette crypto ?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="sellCrypto(transactionToSell)">Confirmer</v-btn>
+          <v-btn color="error" @click="cancelSellCrypto">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
-// Importez les composants et bibliothèques nécessaires ici...
 import SideBarNavClient from "@/components/SideBarNavClient.vue";
 import axios from "axios";
 
@@ -60,6 +72,9 @@ export default {
       userTransactions: [],
       totalBalanceEuros: 0,
       fakeAccountBalance: 0,
+      sellDialog: false,
+      transactionToSell: null,
+      sellingInProgress: false, // État de la vente en cours
     };
   },
   computed: {
@@ -105,50 +120,59 @@ export default {
   },
   methods: {
     async calculateTotalBalanceEuros() {
+      let totalBalanceEuros = 0;
+      for (const transaction of this.userTransactions) {
+        // Calculez le total de chaque transaction en euros
+        const transactionTotal =
+          transaction.quantity * transaction.purchase_price;
+        totalBalanceEuros += transactionTotal;
+      }
+      return totalBalanceEuros;
+    },
+
+    confirmSellCrypto(transaction) {
+      this.transactionToSell = transaction;
+      this.sellDialog = true;
+    },
+
+    async sellCrypto(transaction) {
       try {
-        let totalBalanceEuros = 0;
-        for (const transaction of this.userTransactions) {
-          const transactionTotal =
-            transaction.quantity * transaction.purchase_price;
-          totalBalanceEuros += transactionTotal;
+        // Commencez la vente (par exemple, suppression de la transaction)
+        const index = this.userTransactions.findIndex((t) => t.id === transaction.id);
+        if (index !== -1) {
+          this.userTransactions.splice(index, 1);
         }
-        return totalBalanceEuros;
+
+        // Mettez à jour le solde fictif du compte
+        if (!isNaN(this.fakeAccountBalance) && !isNaN(transaction.selling_price)) {
+          this.fakeAccountBalance += parseFloat(transaction.selling_price);
+        } else {
+          console.log("Invalid value for fakeAccountBalance or selling_price.");
+        }
+
+        // Recalculez le solde total en euros
+        this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
+
+        // Affichez un message de réussite (vous pouvez le remplacer par votre propre mécanisme de notification)
+        console.log(`Vente confirmée pour : ${transaction.currency_name}`);
+
+        // Fermez automatiquement la boîte de dialogue après la confirmation
+        this.sellDialog = false;
+
+        // Définissez sellingInProgress sur false pour indiquer que la vente est terminée
+        this.sellingInProgress = false;
       } catch (error) {
-        console.log("Error calculating total balance: ", error);
-        return 0;
+        console.log("Error during selling operation: ", error);
       }
     },
-    async sellCrypto(transaction) {
-  try {
-    // Supprimez la crypto du portefeuille de l'utilisateur
-    const index = this.userTransactions.findIndex((t) => t.id === transaction.id);
-    if (index !== -1) {
-      this.userTransactions.splice(index, 1);
-    }
 
-    // Vérifiez si fakeAccountBalance est un nombre valide avant d'ajouter le selling_price
-    if (!isNaN(this.fakeAccountBalance) && !isNaN(transaction.selling_price)) {
-      this.fakeAccountBalance += parseFloat(transaction.selling_price);
-    } else {
-      console.log("Invalid value for fakeAccountBalance or selling_price.");
-    }
-
-    // Recalculez le solde total en euros
-    this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
-
-    // Affichez un message de réussite (vous pouvez le remplacer par votre propre mécanisme de notification)
-    console.log(`Sold cryptocurrency: ${transaction.currency_name}`);
-  } catch (error) {
-    console.log("Error during selling operation: ", error);
-  }
-},
-
-
+    cancelSellCrypto() {
+      this.sellDialog = false;
+    },
   },
   components: { SideBarNavClient },
 };
 </script>
-
 
 <style>
 .title {

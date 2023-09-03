@@ -34,7 +34,6 @@ class UserTableSeeder extends Seeder
             'email' => 'quentinleroy@example.com',
             'status' => 'client',
             'password' => Hash::make('QuentinL'),
-            'euro_balance' => 5000,
         ]);
     }
 }

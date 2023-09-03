@@ -12,7 +12,6 @@
             <p><strong>Prénom:</strong> {{ firstName }}</p>
             <p><strong>Email:</strong> {{ email }}</p>
             <p><strong>Status:</strong> {{ userStatus }}</p>
-            <p><strong>Mon argent:</strong> {{ money }} €</p>
           </v-card-text>
         </v-card>
       </v-container>
@@ -28,7 +27,6 @@ export default {
       firstName: "", // Initialize first name
       email: "", // Initialize email
       userStatus: "", // Initialize user status
-      money:"", // Initialize money
     };
   },
   mounted() {
@@ -37,7 +35,6 @@ export default {
     this.firstName = this.$store.state.userData.first_name; // Set first name from stored data
     this.email = this.$store.state.userData.email; // Set email from stored data
     this.userStatus = this.$store.state.userData.status; // Set user status from stored data
-    this.money = this.$store.state.userData.euro_balance; // Set user status from stored data
   },
 };
 </script>

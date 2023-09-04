@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- Code pour afficher le graphique en fonction de l'ID de la crypto -->
-    <!-- Utilisez l'ID pour récupérer les données du graphique spécifique à cette crypto -->
     <canvas ref="cryptoChartCanvas"></canvas>
   </div>
 </template>

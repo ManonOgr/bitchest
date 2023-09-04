@@ -2,7 +2,7 @@
   <!-- Container for the user update form -->
   <v-container class="mt-10 add-box">
     <h1 class="headline">Modifier un utilisateur</h1>
-    <v-form @submit.prevent="updateUser">
+    <v-form @submit.prevent="openUpdateUserDialog">
       <!-- Input fields for user data -->
       <v-text-field
         v-model="userData.first_name"
@@ -28,9 +28,23 @@
           <option value="admin">Admin</option>
         </select>
       </div>
-      <!-- Button to submit form data -->
-      <v-btn type="submit" depressed>Modifier</v-btn>
+      <!-- Button to open the confirmation dialog -->
+      <v-btn @click="openUpdateUserDialog" depressed color="purple">Modifier</v-btn>
     </v-form>
+
+    <!-- Dialog component for confirmation -->
+    <v-dialog v-model="confirmationDialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline">Confirmation</v-card-title>
+        <v-card-text>
+          Êtes-vous sûr de vouloir modifier cet utilisateur ?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="purple" @click="updateUser">Confirmer</v-btn>
+          <v-btn text @click="closeConfirmationDialog">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -46,6 +60,7 @@ export default {
         email: "",
         status: "",
       },
+      confirmationDialog: false, // Added confirmationDialog state
     };
   },
   created() {
@@ -63,6 +78,12 @@ export default {
           console.error(error);
         });
     },
+    openUpdateUserDialog() {
+      this.confirmationDialog = true; // Open the confirmation dialog
+    },
+    closeConfirmationDialog() {
+      this.confirmationDialog = false; // Close the confirmation dialog
+    },
     updateUser() {
       const userId = this.$route.params.id; // Get ID from the URL
       axios
@@ -71,6 +92,7 @@ export default {
           console.log(response.data.message);
           // Redirect to the users list upon success
           this.$router.push("/customers"); // Make sure the path is correct
+          this.confirmationDialog = false; // Close the confirmation dialog on success
         })
         .catch((error) => {
           console.error(error);

@@ -1,85 +1,116 @@
 <template>
-  <!-- Vue app container -->
   <v-app>
-    <!-- Sidebar navigation component -->
     <sidebar-nav></sidebar-nav>
-
-    <!-- App bar for the application -->
     <v-app-bar app>
-      <!-- Navigation icon for opening/closing sidebar -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <!-- Title for the app bar -->
       <v-toolbar-title>Cours des cryptos</v-toolbar-title>
     </v-app-bar>
-
-    <!-- Main content area -->
     <v-main>
       <v-container>
-        <!-- Table displaying crypto data -->
         <v-table>
           <thead>
             <tr>
               <th class="text-left">Id</th>
               <th class="text-left">Nom</th>
               <th class="text-left">Cours</th>
+              <th class="text-left">Action</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Loop through cryptos and display data -->
-            <tr v-for="crypto in cryptos" :key="crypto">
+            <tr v-for="crypto in cryptos" :key="crypto.id">
               <td>{{ crypto.id }}</td>
               <td>{{ crypto.name }}</td>
               <td>{{ getCryptoQuoting(crypto) }} €</td>
+              <td>
+                <v-btn
+                  class="btn"
+                  color="#80CBC4"
+                  @click="showCryptoChart(crypto.id)"
+                  >Voir les cours</v-btn
+                >
+              </td>
             </tr>
           </tbody>
         </v-table>
       </v-container>
     </v-main>
+    <crypto-chart-dialog
+      v-if="selectedCryptoId !== null"
+      :selected-crypto="selectedCrypto"
+      @close="closeCryptoChartDialog"
+    ></crypto-chart-dialog>
   </v-app>
 </template>
 
 <script>
-import axios from "axios"; // Importing axios for making API requests
-import SidebarNav from "@/components/SideBarNav.vue"; // Importing the SidebarNav component
+import axios from "axios";
+import SidebarNav from "@/components/SideBarNav.vue";
+import CryptoChartDialog from "@/components/CryptoChartDialog";
 
 export default {
   components: {
-    SidebarNav, // Registering the SidebarNav component
+    SidebarNav,
+    CryptoChartDialog,
   },
   data() {
     return {
-      drawer: false, // Data property for controlling the sidebar drawer state
-      cryptos: [], // Array to hold crypto data
+      drawer: false,
+      cryptos: [],
+      purchaseDialog: false, // État de la popup d'achat
+      selectedCryptoId: null,
+      selectedQuantity: 0,
+      transactions: [],
+      selectedCrypto: null,
     };
   },
   mounted() {
-    this.fetchCryptos(); // Fetch crypto data when the component is mounted
-    this.fetchHistory(); // Fetch crypto history data when the component is mounted
+    this.fetchCryptos();
+    this.fetchHistory();
   },
   methods: {
     async fetchCryptos() {
-      const URL = "http://localhost:8000/api/currencies"; // API endpoint for fetching crypto data
+      const URL = "http://localhost:8000/api/currencies";
       try {
         const response = await axios.get(URL);
-        this.cryptos = response.data; // Assign fetched data to the cryptos array
+        this.cryptos = response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     },
     getCryptoQuoting(crypto) {
-      return crypto.history ? crypto.history.quoting : 'N/A'; // Get crypto price from history or show 'N/A'
+      return crypto.history ? crypto.history.quoting : "N/A";
     },
     async fetchHistory() {
-      const URL = "http://localhost:8000/api/history"; // API endpoint for fetching crypto history data
+      const URL = "http://localhost:8000/api/history";
       try {
         const response = await axios.get(URL);
         this.cryptos.forEach((crypto, index) => {
-          crypto.history = response.data[index]; // Assign history data to each crypto
+          crypto.history = response.data[index];
         });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     },
+    showCryptoChart(cryptoId) {
+      // Ouvrir le dialogue CryptoChartDialog avec les données de la crypto sélectionnée
+      this.selectedCrypto = this.cryptos.find(
+        (crypto) => crypto.id === cryptoId
+      );
+      this.selectedCryptoId = cryptoId;
+    },
+    closeCryptoChartDialog() {
+      // Fermer le dialogue CryptoChartDialog
+      this.selectedCrypto = null;
+      this.selectedCryptoId = null;
+    },
   },
 };
 </script>
+
+<style>
+.btn {
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+</style>

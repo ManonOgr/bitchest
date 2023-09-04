@@ -21,7 +21,7 @@
             <router-link to="/add-user">
               <v-btn color="success">Ajouter</v-btn>
             </router-link>
-            <v-table height="300px">
+            <v-table height="570px">
               <thead>
                 <tr>
                   <th class="text-left id-column">ID</th>
@@ -44,12 +44,14 @@
                   <td class="text-left">
                     <v-btn
                       @click="openDeleteDialog(user)"
-                      class="mt-2"
+                      class="btn"
                       color="error"
-                    >Supprimer</v-btn>
+                      >Supprimer</v-btn
+                    >
                   </td>
                   <td class="text-left">
                     <v-btn
+                      class="btn"
                       color="purple"
                       @click="
                         $router.push({
@@ -57,7 +59,8 @@
                           params: { id: user.id },
                         })
                       "
-                    >Modifier</v-btn>
+                      >Modifier</v-btn
+                    >
                   </td>
                 </tr>
               </tbody>
@@ -67,21 +70,20 @@
       </v-container>
     </v-main>
 
-
-  <!-- Dialog component for delete confirmation -->
-  <v-dialog v-model="deleteDialog" max-width="400">
-    <v-card>
-      <v-card-title class="headline">Confirmation</v-card-title>
-      <v-card-text>
-        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="error" @click="deleteUserConfirmed">Supprimer</v-btn>
-        <v-btn text @click="deleteDialog = false">Annuler</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</v-app>
+    <!-- Dialog component for delete confirmation -->
+    <v-dialog v-model="deleteDialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline">Confirmation</v-card-title>
+        <v-card-text>
+          Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="error" @click="deleteUserConfirmed">Supprimer</v-btn>
+          <v-btn text @click="deleteDialog = false">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
 <script>
@@ -157,5 +159,11 @@ export default {
 
 .pa-2 {
   padding: 16px;
+}
+
+.btn {
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
 </style>

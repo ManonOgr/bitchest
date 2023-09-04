@@ -35,7 +35,7 @@
                 <td class="text-left">{{ transaction.purchase_price }}</td>
                 <td class="text-left">{{ transaction.selling_price }}</td>
                 <td class="text-left">
-                  <v-btn color="primary" @click="confirmSellCrypto(transaction)">
+                  <v-btn class="btn" color="primary" @click="confirmSellCrypto(transaction)">
                     Vendre
                   </v-btn>
                 </td>
@@ -187,5 +187,11 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-top: 50px;
+}
+
+.btn {
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
 </style>

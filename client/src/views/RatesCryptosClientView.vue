@@ -23,10 +23,10 @@
               <td>{{ crypto.name }}</td>
               <td>{{ getCryptoQuoting(crypto) }} €</td>
               <td>
-                <v-btn color="#80CBC4" @click="showCryptoChart(crypto.id)">Voir les cours</v-btn>
+                <v-btn class="btn" color="#80CBC4" @click="showCryptoChart(crypto.id)">Voir les cours</v-btn>
               </td>
               <td>
-                <v-btn color="pink" @click="openPurchasePopup(crypto)">Achat</v-btn>
+                <v-btn class="btn" color="pink" @click="openPurchasePopup(crypto)">Achat</v-btn>
               </td>
             </tr>
           </tbody>
@@ -137,3 +137,11 @@ export default {
   },
 };
 </script>
+
+<style>
+.btn {
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+</style>

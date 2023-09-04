@@ -22,6 +22,7 @@
               <th class="text-left">Id</th>
               <th class="text-left">Nom</th>
               <th class="text-left">Cours</th>
+              <th class="text-left">Action</th> <!-- Add a new column for the "Purchase" button -->
             </tr>
           </thead>
           <tbody>
@@ -30,11 +31,30 @@
               <td>{{ crypto.id }}</td>
               <td>{{ crypto.name }}</td>
               <td>{{ getCryptoQuoting(crypto) }} €</td>
+              <td>
+                <!-- Add a "Purchase" button that triggers the dialog -->
+                <v-btn color="purple" @click="openPurchaseDialog(crypto)">Achat</v-btn>
+              </td>
             </tr>
           </tbody>
         </v-table>
       </v-container>
     </v-main>
+     <!-- Popup dialog for selecting quantity -->
+     <v-dialog v-model="purchaseDialog" max-width="500">
+      <v-card>
+        <v-card-title>
+          Sélectionner la quantité à acheter pour {{ selectedCrypto ? selectedCrypto.name : '' }}
+        </v-card-title>
+        <v-card-text>
+          <v-text-field v-model="selectedQuantity" label="Quantité" type="number"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="confirmPurchase">Acheter</v-btn>
+          <v-btn @click="closePurchaseDialog">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -50,6 +70,9 @@ export default {
     return {
       drawer: false, // Data property for controlling the sidebar drawer state
       cryptos: [], // Array to hold crypto data
+      purchaseDialog: false, // Flag to control the purchase dialog visibility
+      selectedCrypto: null, // Store the selected crypto for purchase
+      selectedQuantity: 0, // Store the selected quantity for purchase
     };
   },
   mounted() {
@@ -67,7 +90,7 @@ export default {
       }
     },
     getCryptoQuoting(crypto) {
-      return crypto.history ? crypto.history.quoting : 'N/A'; // Get crypto price from history or show 'N/A'
+      return crypto.history ? crypto.history.quoting : "N/A"; // Get crypto price from history or show 'N/A'
     },
     async fetchHistory() {
       const URL = "http://localhost:8000/api/history"; // API endpoint for fetching crypto history data
@@ -79,6 +102,21 @@ export default {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+    },
+    openPurchaseDialog(crypto) {
+      // Set the selected crypto and open the purchase dialog
+      this.selectedCrypto = crypto;
+      this.purchaseDialog = true;
+    },
+    confirmPurchase() {
+      this.purchaseDialog = false;
+      this.selectedCrypto = null;
+      this.selectedQuantity = 0;
+    },
+    closePurchaseDialog() {
+      this.purchaseDialog = false;
+      this.selectedCrypto = null;
+      this.selectedQuantity = 0;
     },
   },
 };

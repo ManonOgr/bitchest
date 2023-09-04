@@ -23,6 +23,7 @@
                 <th class="text-left">Date d'achat</th>
                 <th class="text-left">Prix d'achat</th>
                 <th class="text-left">Prix de vente</th>
+                <th class="text-left">Plus Value</th> <!-- New column for Plus Value -->
                 <th class="text-left">Actions</th>
               </tr>
             </thead>
@@ -34,6 +35,11 @@
                 <td class="text-left">{{ transaction.purchase_date }}</td>
                 <td class="text-left">{{ transaction.purchase_price }}</td>
                 <td class="text-left">{{ transaction.selling_price }}</td>
+                <td class="text-left" :class="{ 'text-red': isNegativeCapitalGain(transaction), 'text-green': isPositiveCapitalGain(transaction) }">
+                  {{ formattedCapitalGain(transaction) }}
+                  <span v-if="isNegativeCapitalGain(transaction)" class="arrow-down">▼</span>
+                  <span v-if="isPositiveCapitalGain(transaction)" class="arrow-up">▲</span>
+                </td>
                 <td class="text-left">
                   <v-btn class="btn" color="primary" @click="confirmSellCrypto(transaction)">
                     Vendre
@@ -169,29 +175,60 @@ export default {
     cancelSellCrypto() {
       this.sellDialog = false;
     },
+
+    isNegativeCapitalGain(transaction) {
+      if (!isNaN(transaction.purchase_price) && !isNaN(transaction.selling_price)) {
+        const purchasePrice = parseFloat(transaction.purchase_price);
+        const sellingPrice = parseFloat(transaction.selling_price);
+        const capitalGain = (sellingPrice - purchasePrice) * transaction.quantity;
+        return capitalGain < 0;
+      }
+      return false;
+    },
+
+    isPositiveCapitalGain(transaction) {
+      if (!isNaN(transaction.purchase_price) && !isNaN(transaction.selling_price)) {
+        const purchasePrice = parseFloat(transaction.purchase_price);
+        const sellingPrice = parseFloat(transaction.selling_price);
+        const capitalGain = (sellingPrice - purchasePrice) * transaction.quantity;
+        return capitalGain > 0;
+      }
+      return false;
+    },
+
+    formattedCapitalGain(transaction) {
+      if (!isNaN(transaction.purchase_price) && !isNaN(transaction.selling_price)) {
+        const purchasePrice = parseFloat(transaction.purchase_price);
+        const sellingPrice = parseFloat(transaction.selling_price);
+        const capitalGain = (sellingPrice - purchasePrice) * transaction.quantity;
+        return new Intl.NumberFormat("fr-FR", {
+          style: "currency",
+          currency: "EUR",
+        }).format(capitalGain);
+      }
+      return "";
+    },
   },
   components: { SideBarNavClient },
 };
 </script>
 
 <style>
-.title {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 50px;
+.text-red {
+  color: red;
 }
 
-.container-tab {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 50px;
+.text-green {
+  color: green;
 }
 
-.btn {
-  text-align: center;
-  margin-bottom: 0px;
-  margin-top: 0px;
+.arrow-up {
+  color: green;
+  margin-left: 5px;
+}
+
+.arrow-down {
+  color: red;
+  margin-left: 5px;
 }
 </style>

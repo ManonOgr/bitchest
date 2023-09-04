@@ -66,6 +66,3 @@ Route::get('user-transactions/{userId}', [TransactionController::class, 'getUser
 
 // Route to sell crypto for ID
 Route::delete('/sell-crypto/{id}', [TransactionController::class, 'sellCrypto']);
-
-// Route to update user details
-Route::put('/users/{id}', [UserController::class, 'update']);

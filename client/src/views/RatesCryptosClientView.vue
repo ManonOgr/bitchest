@@ -1,21 +1,12 @@
 <template>
-<!-- Vue app container -->
   <v-app>
-<!-- Client-specific sidebar navigation component -->
     <sidebar-nav-client></sidebar-nav-client>
-
-    <!-- App bar for the application -->
     <v-app-bar app>
-<!-- Navigation icon for opening/closing sidebar -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-<!-- Title for the app bar -->
       <v-toolbar-title>Cours des cryptos</v-toolbar-title>
     </v-app-bar>
-
-    <!-- Main content area -->
     <v-main>
       <v-container>
-<!-- Table displaying crypto data -->
         <v-table>
           <thead>
             <tr>
@@ -23,6 +14,7 @@
               <th class="text-left">Nom</th>
               <th class="text-left">Cours</th>
               <th class="text-left">Action</th>
+              <th class="text-left">Achat</th> <!-- Nouvelle colonne "Achat" -->
             </tr>
           </thead>
           <tbody>
@@ -33,36 +25,52 @@
               <td>
                 <v-btn color="#80CBC4" @click="showCryptoChart(crypto.id)">Voir les cours</v-btn>
               </td>
+              <td>
+                <v-btn color="pink" @click="openPurchasePopup(crypto)">Achat</v-btn>
+              </td>
             </tr>
           </tbody>
         </v-table>
       </v-container>
     </v-main>
-
-    <!-- Afficher CryptoChartDialog pour la crypto sélectionnée -->
     <crypto-chart-dialog
       v-if="selectedCryptoId !== null"
       :selected-crypto="selectedCrypto"
       @close="closeCryptoChartDialog"
     ></crypto-chart-dialog>
+    <!-- Popup de validation d'achat -->
+    <v-dialog v-model="purchaseDialog">
+      <v-card>
+        <v-card-title>
+          Sélectionnez la quantité d'achat pour {{ selectedCrypto.name }}
+        </v-card-title>
+        <v-card-text>
+          <v-text-field v-model="selectedQuantity" label="Quantité"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="confirmPurchase">Valider</v-btn>
+          <v-btn color="red" @click="cancelPurchase">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
 import axios from "axios";
 import SidebarNavClient from "@/components/SideBarNavClient.vue";
-import CryptoChartDialog from "@/components/CryptoChartDialog"; // Importez le composant CryptoChartDialog
+import CryptoChartDialog from "@/components/CryptoChartDialog"; 
 
 export default {
   components: {
     SidebarNavClient,
-    CryptoChartDialog, // Enregistrez le composant CryptoChartDialog sans l'extension .vue
+    CryptoChartDialog, 
   },
   data() {
     return {
       drawer: false,
       cryptos: [],
-      purchaseDialog: false,
+      purchaseDialog: false, // État de la popup d'achat
       selectedCryptoId: null,
       selectedQuantity: 0,
       transactions: [],
@@ -106,6 +114,25 @@ export default {
       // Fermer le dialogue CryptoChartDialog
       this.selectedCrypto = null;
       this.selectedCryptoId = null;
+    },
+    openPurchasePopup(crypto) {
+      // Ouvrir la popup d'achat et définir la crypto sélectionnée
+      this.selectedCrypto = crypto;
+      this.selectedQuantity = 0; // Réinitialiser la quantité
+      this.purchaseDialog = true;
+    },
+    confirmPurchase() {
+      // Implémentez la logique d'achat ici
+      // Vous pouvez utiliser this.selectedCrypto et this.selectedQuantity
+      // pour effectuer l'achat. Une fois l'achat terminé, fermez la popup.
+      // Vous pouvez également mettre à jour la liste des transactions, etc.
+      
+      // Après l'achat, fermez la popup
+      this.purchaseDialog = false;
+    },
+    cancelPurchase() {
+      // Annuler l'achat et fermer la popup
+      this.purchaseDialog = false;
     },
   },
 };

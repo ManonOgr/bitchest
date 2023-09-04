@@ -64,5 +64,8 @@ Route::get('/status', [TransactionController::class, 'status']);
 // Route to retrieve transactions for a specific user
 Route::get('user-transactions/{userId}', [TransactionController::class, 'getUserTransactions']);
 
-// Route pour vendre une crypto par ID
+// Route to sell crypto for ID
 Route::delete('/sell-crypto/{id}', [TransactionController::class, 'sellCrypto']);
+
+// Route to update user details
+Route::put('/users/{id}', [UserController::class, 'update']);

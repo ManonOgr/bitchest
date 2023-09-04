@@ -16,8 +16,9 @@ class Transaction extends Model
      */
     use HasFactory;
     protected $fillable = [
-        'currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date', 'sold', 'selling_amount', 'selling_date'
+        'currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date', 'sold', 'selling_amount', 'selling_date', 'crypto_id'
     ];
+
 
     /**
      * The attributes that should be hidden for arrays.

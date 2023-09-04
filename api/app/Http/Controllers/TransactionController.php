@@ -35,33 +35,33 @@ class TransactionController extends Controller
     }
 
     public function sellCrypto($id)
-{
-    try {
-        // Retrieve the transaction by its ID
-        $transaction = Transaction::find($id);
+    {
+        try {
+            // Récupérez la transaction par son ID
+            $transaction = Transaction::find($id);
 
-        if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], 404);
+            if (!$transaction) {
+                return response()->json(['message' => 'Transaction non trouvée'], 404);
+            }
+
+            // Vérifiez si le prix de vente est disponible
+            if (is_null($transaction->selling_price)) {
+                return response()->json(['message' => 'Prix de vente non disponible pour cette transaction'], 404);
+            }
+
+            // Votre logique de vente ici, vous pouvez utiliser directement $transaction->selling_price comme prix de vente
+
+            // Enregistrez la transaction mise à jour (si vous mettez également à jour d'autres propriétés)
+             $transaction->save();
+
+            // Supprimez la transaction si nécessaire
+            $transaction->delete();
+
+            return response()->json(['message' => 'Crypto vendue avec succès'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erreur lors de la vente de la crypto'], 500);
         }
-
-        // Check if the selling_price is available
-        if (is_null($transaction->selling_price)) {
-            return response()->json(['message' => 'Prix de vente non disponible pour cette transaction'], 404);
-        }
-
-        // Your selling logic here, you can directly use $transaction->selling_price as the selling price
-
-        // Save the updated transaction (if you're updating other properties as well)
-        // $transaction->save();
-
-        // Delete the transaction if needed
-        $transaction->delete(); // Uncomment this line if you want to delete the transaction
-
-        return response()->json(['message' => 'Crypto sold successfully'], 200);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error selling crypto'], 500);
     }
-}
 
 
 
@@ -83,58 +83,6 @@ class TransactionController extends Controller
         date_default_timezone_set('Europe/Paris');
     }
 
-    /**
-     * Display the user's transactions (all of them or by currency).
-     */
-    public function index(Currency $currency = null)
-    {  // If a currency is specified :
-        $transactions = $currency
-            // Get the uder's transactions corresponding to this currency
-            ? Auth::user()->transactions()->where('currency_id', $currency->id)->get()
-            // Else, get all of their transactions
-            : Auth::user()->transactions;
-
-        // Format a few fields of the transactions
-        $transactions = $transactions->map(function ($transaction) {
-
-            $transaction->quantity = round($transaction->quantity, 4);
-
-            $transaction->purchase_price = round($transaction->purchase_price, 4);
-
-            $transaction->selling_price = round($transaction->selling_price, 4);
-
-            return $transaction;
-        });
-
-        return view('transactions.index', ['transactions' => $transactions, 'currency' => $currency]);
-    }
-
-    /**
-     * Display the user's transactions corresponding to a currency in order to sell them.
-     */
-    public function sell(Currency $currency)
-    { //    user logged
-        $transactions = Auth::user()
-            ->transactions()
-            ->where([
-                // filter
-                'sold' => false,
-                // Corresponding to the specified currency
-                'currency_id' => $currency->id
-            ])
-            ->get();
-
-        // Format a few fields of the transactions
-        $transactions = $transactions->map(function ($transaction) {
-            // Round figures to make them more readable
-            $transaction->purchase_price = round($transaction->purchase_price, 4);
-            return $transaction;
-        });
-
-        $title = 'Sales of ' . $currency->name;
-
-        return view('transactions.sell', ['transactions' => $transactions, 'title' => $title]);
-    }
 
     /**
      * Show the form for buying a currency.
@@ -223,6 +171,51 @@ class TransactionController extends Controller
                 ->route('wallet')
                 ->with('message', 'The transaction was successful. Your sold : ' . floatval($quantity_total) . ' ' . $currency->name . ' for an amount of ' . round($selling_amount_total, 2) . ' ' . config('currency')['symbol'] . '.');
         }
+    }
+
+
+    // ...
+
+    public function buyCrypto(Request $request)
+    {
+        try {
+            // Validez les données de la requête (par exemple, la crypto à acheter et la quantité)
+            $request->validate([
+                'crypto_id' => 'required|integer', // ID de la crypto à acheter
+                'quantity' => 'required|numeric|min:0', // Quantité à acheter (doit être positive)
+            ]);
+
+            // Obtenez l'ID de l'utilisateur connecté
+            $userId = auth()->user()->id;
+
+            // Logique d'achat ici...
+            // Par exemple, créez une nouvelle transaction d'achat
+
+            $transaction = new Transaction([
+                'user_id' => $userId,
+                'currency_id' => $request->crypto_id,
+                'quantity' => $request->quantity,
+                'transaction_type' => 'achat',
+                // Autres données de transaction si nécessaire
+            ]);
+
+            // Enregistrez la transaction dans la base de données
+            $transaction->save();
+
+            // Vous pouvez également effectuer d'autres opérations ici, par exemple, mettre à jour le portefeuille de l'utilisateur
+
+            return response()->json(['message' => 'Transaction d\'achat réussie']);
+        } catch (\Exception $e) {
+            // En cas d'erreur, renvoyez une réponse d'erreur
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+
+
+
+        // Vous pouvez également effectuer d'autres opérations ici, par exemple, mettre à jour le portefeuille de l'utilisateur
+
+        return response()->json(['message' => 'Transaction d\'achat réussie']);
     }
 
     public function status()

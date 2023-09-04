@@ -40,8 +40,9 @@
         </v-table>
       </v-container>
     </v-main>
-     <!-- Popup dialog for selecting quantity -->
-     <v-dialog v-model="purchaseDialog" max-width="500">
+
+    <!-- Popup dialog for selecting quantity -->
+    <v-dialog v-model="purchaseDialog" max-width="500">
       <v-card>
         <v-card-title>
           Sélectionner la quantité à acheter pour {{ selectedCrypto ? selectedCrypto.name : '' }}
@@ -50,7 +51,7 @@
           <v-text-field v-model="selectedQuantity" label="Quantité" type="number"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="confirmPurchase">Acheter</v-btn>
+          <v-btn color="purple" @click="confirmPurchase">Acheter</v-btn>
           <v-btn @click="closePurchaseDialog">Annuler</v-btn>
         </v-card-actions>
       </v-card>
@@ -108,11 +109,34 @@ export default {
       this.selectedCrypto = crypto;
       this.purchaseDialog = true;
     },
-    confirmPurchase() {
-      this.purchaseDialog = false;
-      this.selectedCrypto = null;
-      this.selectedQuantity = 0;
-    },
+    async confirmPurchase() {
+  try {
+    if (!this.selectedCrypto) {
+      console.error("Sélectionnez une crypto avant d'acheter.");
+      return;
+    }
+
+    // Assurez-vous que selectedCrypto contient l'ID de la crypto que vous souhaitez acheter
+    const cryptoId = this.selectedCrypto.id;
+
+    const response = await axios.post('http://localhost:8000/api/buy-crypto', {
+      crypto_id: cryptoId, // Assurez-vous d'inclure le champ crypto_id avec la valeur correcte
+      quantity: this.selectedQuantity,
+    });
+
+    // Gérez la réponse de votre API ici, par exemple, affichez un message de confirmation.
+    console.log("Réponse de l'API :", response.data);
+
+    // Fermez la boîte de dialogue et réinitialisez les valeurs
+    this.purchaseDialog = false;
+    this.selectedCrypto = null;
+    this.selectedQuantity = 0;
+  } catch (error) {
+    // Gérez les erreurs ici, par exemple, affichez un message d'erreur.
+    console.error("Erreur lors de l'achat :", error);
+  }
+},
+
     closePurchaseDialog() {
       this.purchaseDialog = false;
       this.selectedCrypto = null;

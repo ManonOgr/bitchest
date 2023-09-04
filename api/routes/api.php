@@ -67,5 +67,3 @@ Route::get('user-transactions/{userId}', [TransactionController::class, 'getUser
 // Route to sell crypto for ID
 Route::delete('/sell-crypto/{id}', [TransactionController::class, 'sellCrypto']);
 
-// Route to buy a crypto
-Route::post('/buy-crypto', [TransactionController::class, 'buyCrypto']);

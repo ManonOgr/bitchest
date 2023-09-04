@@ -174,50 +174,6 @@ class TransactionController extends Controller
     }
 
 
-    // ...
-
-    public function buyCrypto(Request $request)
-    {
-        try {
-            // Validez les données de la requête (par exemple, la crypto à acheter et la quantité)
-            $request->validate([
-                'crypto_id' => 'required|integer', // ID de la crypto à acheter
-                'quantity' => 'required|numeric|min:0', // Quantité à acheter (doit être positive)
-            ]);
-
-            // Obtenez l'ID de l'utilisateur connecté
-            $userId = auth()->user()->id;
-
-            // Logique d'achat ici...
-            // Par exemple, créez une nouvelle transaction d'achat
-
-            $transaction = new Transaction([
-                'user_id' => $userId,
-                'currency_id' => $request->crypto_id,
-                'quantity' => $request->quantity,
-                'transaction_type' => 'achat',
-                // Autres données de transaction si nécessaire
-            ]);
-
-            // Enregistrez la transaction dans la base de données
-            $transaction->save();
-
-            // Vous pouvez également effectuer d'autres opérations ici, par exemple, mettre à jour le portefeuille de l'utilisateur
-
-            return response()->json(['message' => 'Transaction d\'achat réussie']);
-        } catch (\Exception $e) {
-            // En cas d'erreur, renvoyez une réponse d'erreur
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-
-
-
-
-        // Vous pouvez également effectuer d'autres opérations ici, par exemple, mettre à jour le portefeuille de l'utilisateur
-
-        return response()->json(['message' => 'Transaction d\'achat réussie']);
-    }
-
     public function status()
     {
         // Renvoie une réponse JSON avec le statut "ok"

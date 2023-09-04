@@ -109,33 +109,6 @@ export default {
       this.selectedCrypto = crypto;
       this.purchaseDialog = true;
     },
-    async confirmPurchase() {
-  try {
-    if (!this.selectedCrypto) {
-      console.error("Sélectionnez une crypto avant d'acheter.");
-      return;
-    }
-
-    // Assurez-vous que selectedCrypto contient l'ID de la crypto que vous souhaitez acheter
-    const cryptoId = this.selectedCrypto.id;
-
-    const response = await axios.post('http://localhost:8000/api/buy-crypto', {
-      crypto_id: cryptoId, // Assurez-vous d'inclure le champ crypto_id avec la valeur correcte
-      quantity: this.selectedQuantity,
-    });
-
-    // Gérez la réponse de votre API ici, par exemple, affichez un message de confirmation.
-    console.log("Réponse de l'API :", response.data);
-
-    // Fermez la boîte de dialogue et réinitialisez les valeurs
-    this.purchaseDialog = false;
-    this.selectedCrypto = null;
-    this.selectedQuantity = 0;
-  } catch (error) {
-    // Gérez les erreurs ici, par exemple, affichez un message d'erreur.
-    console.error("Erreur lors de l'achat :", error);
-  }
-},
 
     closePurchaseDialog() {
       this.purchaseDialog = false;

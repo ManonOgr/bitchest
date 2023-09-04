@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Currency;
 use App\Models\Transaction;
 use App\Models\API;
+use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
@@ -65,23 +66,51 @@ class TransactionController extends Controller
 
 
 
-
-
-
-    public function __construct(Request $request)
+ /**
+     * Effectue l'achat de la cryptomonnaie.
+     *
+     * @param  Request  $request
+     * @param  API  $api
+     * @return \Illuminate\Http\Response
+     */
+    public function purchaseCrypto(Request $request, API $api)
     {
-        if (Str::contains($request->path(), 'create')) {
-            view()->composer('layouts.layout', function ($view) {
-                $view->with('section', 'currencies');
-            });
-        } else {
-            view()->composer('layouts.layout', function ($view) {
-                $view->with('section', 'wallet');
-            });
+        // Validez les données de la requête
+        $validator = Validator::make($request->all(), [
+            'currency_id' => 'required|integer', // Utilisez 'currency_id' conformément à votre schéma de base de données
+            'user_id' => 'required|integer', // Ajoutez la validation de l'ID de l'utilisateur
+            'amount' => 'nullable|numeric|min:0.01', // Le montant est facultatif s'il s'agit d'une quantité
+            'quantity' => 'nullable|numeric|min:0.000001', // La quantité est facultative s'il s'agit d'un montant
+            'purchase_price' => 'required|numeric|min:0.000000001', // Ajoutez la validation du prix d'achat
+            'purchase_date' => 'required|date_format:Y-m-d\TH:i:sP', // Utilisez le format ISO pour la date
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        date_default_timezone_set('Europe/Paris');
+        try {
+            // Récupérez les données de la requête
+            $data = $request->only(['currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date']);
+
+            // Créez une nouvelle transaction
+            $transaction = new Transaction([
+                'currency_id' => $data['currency_id'],
+                'user_id' => $data['user_id'],
+                'amount' => $data['amount'],
+                'quantity' => $data['quantity'],
+                'purchase_price' => $data['purchase_price'],
+                'purchase_date' => $data['purchase_date'],
+            ]);
+
+            $transaction->save();
+
+            return response()->json(['message' => 'Achat de cryptomonnaie réussi', 'transaction' => $transaction], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erreur lors de l\'achat de cryptomonnaie'], 500);
+        }
     }
+
 
 
     /**

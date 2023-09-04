@@ -11,6 +11,7 @@ import RatesCryptosAdminView from "@/views/RatesCryptosAdminView.vue";
 import CustomersManagementView from "@/views/CustomersManagementView.vue";
 import AddUsersView from "@/views/AddUsersView.vue";
 import UpdateUsersView from "@/views/UpdateUsersView.vue";
+import GraphView from "@/views/GraphView.vue";
 
 // Create a router instance
 const router = createRouter({
@@ -76,6 +77,12 @@ const router = createRouter({
       name: "updateuser",
       component: UpdateUsersView,
     },
+      // Route for graphcrypto
+      {
+        path: "/graphcrypto",
+        name: "graphcrypto",
+        component: GraphView,
+      },
   ],
 });
 

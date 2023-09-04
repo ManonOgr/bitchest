@@ -15,15 +15,7 @@ class API extends Model
      *
      * @return void
      */
-    public function __construct()
-    {
-        // Initialize Guzzle for API calls
-        $this->client = new Client([
-            'base_uri' => 'https://min-api.cryptocompare.com'
-        ]);
-       // Real currency used
-        $this->conversion_currency = config('currency')['api_id'];
-    }
+ 
 
     /**
      * Get a single cryptocurrency's current price.

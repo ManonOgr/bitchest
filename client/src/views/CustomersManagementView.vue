@@ -46,21 +46,18 @@
                       @click="openDeleteDialog(user)"
                       class="btn"
                       color="error"
-                      >Supprimer</v-btn
                     >
+                      Supprimer
+                    </v-btn>
                   </td>
                   <td class="text-left">
                     <v-btn
                       class="btn"
                       color="purple"
-                      @click="
-                        $router.push({
-                          name: 'updateuser',
-                          params: { id: user.id },
-                        })
-                      "
-                      >Modifier</v-btn
+                      @click="openEditDialog(user)"
                     >
+                      Modifier
+                    </v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -83,6 +80,65 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Popup for editing user -->
+    <v-dialog v-model="editDialog" max-width="600">
+      <v-card>
+        <v-card-title class="headline">Modifier un utilisateur</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="showEditConfirmationDialog">
+            <!-- Form fields for user data -->
+            <v-text-field
+              v-model="userData.first_name"
+              label="Prénom"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="userData.last_name"
+              label="Nom"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="userData.email"
+              label="Email"
+              type="email"
+              required
+            ></v-text-field>
+            <div>
+              <!-- Dropdown for user status selection -->
+            <div>
+        <!-- Dropdown for user status selection -->
+              <select id="status" v-model="userData.status" required>
+                <option value="" disabled selected>Selectionne un status</option>
+                <option value="client">Client</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            </div>
+            <!-- Button to confirm the update -->
+            <v-btn @click="showEditConfirmationDialog" depressed color="purple">Modifier</v-btn>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <!-- Button to close the edit popup -->
+          <v-btn @click="closeEditDialog" text>Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Popup for confirmation of edit -->
+    <v-dialog v-model="confirmEditDialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline">Confirmation de modification</v-card-title>
+        <v-card-text>
+          Êtes-vous sûr de vouloir appliquer ces modifications ?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="purple" @click="updateUser">Oui</v-btn>
+          <v-btn text @click="confirmEditDialog = false">Non</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -96,6 +152,16 @@ export default {
       users: [],
       deleteDialog: false,
       userToDelete: null,
+      editDialog: false,
+      userToEdit: null,
+      userData: {
+        id: null, // Ajoutez un champ id pour identifier l'utilisateur
+        first_name: "",
+        last_name: "",
+        email: "",
+        status: "",
+      },
+      confirmEditDialog: false, // Popup de confirmation de modification
     };
   },
   mounted() {
@@ -127,6 +193,39 @@ export default {
           console.error(error);
         }
       }
+    },
+    openEditDialog(user) {
+      this.userToEdit = user;
+      this.userData = { ...user }; // Copiez les données de l'utilisateur dans le formulaire
+      this.userData.id = user.id; // Assurez-vous que l'ID de l'utilisateur est défini correctement
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.editDialog = false;
+    },
+    showEditConfirmationDialog() {
+      this.confirmEditDialog = true;
+    },
+    updateUser() {
+      const userId = this.userData.id;
+      axios
+        .put(`/api/users/${userId}`, this.userData)
+        .then((response) => {
+          console.log(response.data.message);
+
+          // Mettez à jour les données de l'utilisateur dans la liste des utilisateurs
+          const updatedUserIndex = this.users.findIndex((user) => user.id === userId);
+          if (updatedUserIndex !== -1) {
+            this.users[updatedUserIndex] = { ...this.userData };
+          }
+
+          this.$router.push("/customers"); // Redirigez vers la liste des utilisateurs
+          this.editDialog = false; // Fermez la boîte de dialogue de modification
+          this.confirmEditDialog = false; // Fermez la boîte de dialogue de confirmation de modification
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
   components: { SideBarNav },
@@ -165,5 +264,15 @@ export default {
   text-align: center;
   margin-bottom: 0px;
   margin-top: 0px;
+}
+
+#status {
+  font-size: 16px;
+  padding: 10px;
+  border-bottom: 1px solid rgb(62, 61, 61);
+  color: #333;
+  background: rgba(36, 36, 36, 0.1);
+  width: 100%;
+  margin: 8px 0;
 }
 </style>

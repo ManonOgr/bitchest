@@ -10,7 +10,6 @@ import RatesCryptosClientView from "@/views/RatesCryptosClientView.vue";
 import RatesCryptosAdminView from "@/views/RatesCryptosAdminView.vue";
 import CustomersManagementView from "@/views/CustomersManagementView.vue";
 import AddUsersView from "@/views/AddUsersView.vue";
-import UpdateUsersView from "@/views/UpdateUsersView.vue";
 import GraphView from "@/views/GraphView.vue";
 
 // Create a router instance
@@ -70,12 +69,6 @@ const router = createRouter({
       path: "/add-user",
       name: "adduser",
       component: AddUsersView,
-    },
-    // Route for updating an existing user (use :id to capture user ID)
-    {
-      path: "/update-user/:id",
-      name: "updateuser",
-      component: UpdateUsersView,
     },
       // Route for graphcrypto
       {

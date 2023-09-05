@@ -22,10 +22,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedDecimal('amount')->default(0);
             $table->unsignedDecimal('quantity', 15, 6);
-            $table->unsignedDecimal('purchase_price', 15, 10);
+            $table->unsignedDecimal('purchase_price', 15, 6);
             $table->dateTime('purchase_date');
             $table->unsignedDecimal('selling_amount')->nullable();
-            $table->unsignedDecimal('selling_price', 15, 10);
+            $table->unsignedDecimal('selling_price', 15, 6);
             $table->dateTime('selling_date');
         });
     }

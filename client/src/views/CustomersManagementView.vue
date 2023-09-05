@@ -18,9 +18,7 @@
         <div class="pa-2">
           <h1 class="headline">Liste des utilisateurs</h1>
           <v-responsive>
-            <router-link to="/add-user">
-              <v-btn color="success">Ajouter</v-btn>
-            </router-link>
+            <v-btn color="success" @click="openAddUserDialog">Ajouter</v-btn>
             <v-table height="570px">
               <thead>
                 <tr>
@@ -81,7 +79,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- Popup for editing user -->
+    <!-- Composant de dialogue pour la modification de l'utilisateur -->
     <v-dialog v-model="editDialog" max-width="600">
       <v-card>
         <v-card-title class="headline">Modifier un utilisateur</v-card-title>
@@ -139,6 +137,54 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Composant de dialogue pour l'ajout d'utilisateur -->
+    <v-dialog v-model="addUserDialog" max-width="600">
+      <v-card>
+        <v-card-title class="headline">Ajouter un utilisateur</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="addUser">
+            <!-- Champs de formulaire pour les données de l'utilisateur -->
+            <v-text-field
+              v-model="userData.first_name"
+              label="Prénom"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="userData.last_name"
+              label="Nom"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="userData.email"
+              label="Email"
+              type="email"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="userData.password"
+              label="Mot de passe"
+              type="password"
+              required
+            ></v-text-field>
+            <div>
+              <!-- Menu déroulant pour la sélection du statut de l'utilisateur -->
+              <select id="status" v-model="userData.status" required>
+                <option value="" disabled selected>Selectionne un status</option>
+                <option value="client">Client</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <!-- Bouton pour confirmer l'ajout -->
+            <v-btn @click="addUser" depressed color="success">Ajouter</v-btn>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <!-- Bouton pour fermer la boîte de dialogue d'ajout d'utilisateur -->
+          <v-btn @click="closeAddUserDialog" text>Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -154,14 +200,16 @@ export default {
       userToDelete: null,
       editDialog: false,
       userToEdit: null,
+      addUserDialog: false,
       userData: {
-        id: null, // Ajoutez un champ id pour identifier l'utilisateur
+        id: null,
         first_name: "",
         last_name: "",
         email: "",
         status: "",
+        password: ""
       },
-      confirmEditDialog: false, // Popup de confirmation de modification
+      confirmEditDialog: false,
     };
   },
   mounted() {
@@ -196,8 +244,8 @@ export default {
     },
     openEditDialog(user) {
       this.userToEdit = user;
-      this.userData = { ...user }; // Copiez les données de l'utilisateur dans le formulaire
-      this.userData.id = user.id; // Assurez-vous que l'ID de l'utilisateur est défini correctement
+      this.userData = { ...user };
+      this.userData.id = user.id;
       this.editDialog = true;
     },
     closeEditDialog() {
@@ -213,20 +261,51 @@ export default {
         .then((response) => {
           console.log(response.data.message);
 
-          // Mettez à jour les données de l'utilisateur dans la liste des utilisateurs
           const updatedUserIndex = this.users.findIndex((user) => user.id === userId);
           if (updatedUserIndex !== -1) {
             this.users[updatedUserIndex] = { ...this.userData };
           }
 
-          this.$router.push("/customers"); // Redirigez vers la liste des utilisateurs
-          this.editDialog = false; // Fermez la boîte de dialogue de modification
-          this.confirmEditDialog = false; // Fermez la boîte de dialogue de confirmation de modification
+          this.editDialog = false;
+          this.confirmEditDialog = false;
         })
         .catch((error) => {
           console.error(error);
         });
     },
+    openAddUserDialog() {
+      this.addUserDialog = true;
+      // Réinitialisez les champs de saisie pour l'ajout d'utilisateur
+      this.userData = {
+        id: null,
+        first_name: "",
+        last_name: "",
+        email: "",
+        status: "",
+        password: ""
+      };
+    },
+    closeAddUserDialog() {
+      this.addUserDialog = false;
+    },
+    addUser() {
+      axios
+        .post('/api/users', this.userData)
+        .then(response => {
+          console.log(response.data.message);
+
+          // Ajoutez le nouvel utilisateur à la liste des utilisateurs
+          this.users.push({ ...this.userData, id: response.data.id });
+
+          this.addUserDialog = false; // Fermez la boîte de dialogue d'ajout d'utilisateur
+
+          // Rechargez le tableau après l'ajout d'un utilisateur
+          this.fetchUsers();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   },
   components: { SideBarNav },
 };

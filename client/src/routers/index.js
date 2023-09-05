@@ -9,7 +9,6 @@ import WalletView from "@/views/WalletView.vue";
 import RatesCryptosClientView from "@/views/RatesCryptosClientView.vue";
 import RatesCryptosAdminView from "@/views/RatesCryptosAdminView.vue";
 import CustomersManagementView from "@/views/CustomersManagementView.vue";
-import AddUsersView from "@/views/AddUsersView.vue";
 import GraphView from "@/views/GraphView.vue";
 
 // Create a router instance
@@ -63,12 +62,6 @@ const router = createRouter({
       name: "customers",
       component: CustomersManagementView,
       meta: { requiresAuth: true, roles: ["admin"] }, // Additional metadata for authentication and authorization
-    },
-    // Route for adding a new user
-    {
-      path: "/add-user",
-      name: "adduser",
-      component: AddUsersView,
     },
       // Route for graphcrypto
       {

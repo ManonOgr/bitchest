@@ -14,7 +14,7 @@
         <h2>Solde mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
         <h2>Solde de mon compte en Euros: {{ formattedFakeAccountBalance }}</h2>
         <v-responsive>
-          <v-table height="300px">
+          <v-table height="570px">
             <thead>
               <tr>
                 <th class="text-left id-column">Crypto ID</th>

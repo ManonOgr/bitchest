@@ -34,7 +34,9 @@
       </v-list>
       <!-- Logout button -->
       <div class="text-center">
-        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal">Déconnexion</v-btn>
+        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal"
+          >Déconnexion</v-btn
+        >
       </div>
     </v-navigation-drawer>
 
@@ -42,19 +44,18 @@
     <v-dialog v-model="logoutDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Confirmation</v-card-title>
-        <v-card-text>
-          Êtes-vous sûr de vouloir vous déconnecter ?
-        </v-card-text>
+        <v-card-text> Êtes-vous sûr de vouloir vous déconnecter ? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="logoutDialog = false">Annuler</v-btn>
+          <v-btn color="blue darken-1" text @click="logoutDialog = false"
+            >Annuler</v-btn
+          >
           <v-btn color="blue darken-1" text @click="logout">Déconnexion</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
-
 
 <script setup>
 import { ref } from "vue";
@@ -63,7 +64,7 @@ import router from "@/routers"; // Import Vue Router instance for navigation
 
 // State for the logout confirmation dialog
 const logoutDialog = ref(false);
-
+const sessionToken = localStorage.getItem("user");
 // Function to show the logout confirmation dialog
 function showLogoutDialog() {
   logoutDialog.value = true;
@@ -74,22 +75,20 @@ function logout() {
   try {
     // Send a POST request to logout endpoint
     axios
-      .post(
-        "http://127.0.0.1:8000/api/logout",
-        {},
-        {
-          // Define request headers
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      )
+      .get("http://127.0.0.1:8000/api/logout", {
+        // Define request headers
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          // "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${sessionToken}`,
+        },
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res);
         // If logout is successful, navigate to the home page
-        if (res.status === 204) {
+        if (res.status === 200) {
           router.push("/");
         }
       });

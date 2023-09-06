@@ -19,15 +19,15 @@ class TransactionController extends Controller
      * @return void
      */
 
-     public function getUserTransactions($userId)
-     {
-         $userTransactions = Transaction::where('user_id', $userId)
-             ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
-             ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date', 'transactions.purchase_price','transactions.selling_price' ) // Ajoutez le champ purchase_price ici
-             ->get();
+    public function getUserTransactions($userId)
+    {
+        $userTransactions = Transaction::where('user_id', $userId)
+            ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
+            ->select('transactions.id', 'transactions.currency_id', 'currencies.name as currency_name', 'transactions.quantity', 'transactions.purchase_date', 'transactions.purchase_price', 'transactions.selling_price') // Ajoutez le champ purchase_price ici
+            ->get();
 
-         return response()->json(['transactions' => $userTransactions]);
-     }
+        return response()->json(['transactions' => $userTransactions]);
+    }
 
     public function getTransaction()
     {
@@ -53,7 +53,7 @@ class TransactionController extends Controller
             // Votre logique de vente ici, vous pouvez utiliser directement $transaction->selling_price comme prix de vente
 
             // Enregistrez la transaction mise à jour (si vous mettez également à jour d'autres propriétés)
-             $transaction->save();
+            $transaction->save();
 
             // Supprimez la transaction si nécessaire
             $transaction->delete();
@@ -65,51 +65,46 @@ class TransactionController extends Controller
     }
 
 
+public function purchaseCrypto(Request $request)
+{
+    // Vérifiez si l'utilisateur est connecté
+    if (Auth::check()) {
+        // L'utilisateur est connecté, continuez avec la logique d'achat
+        $user = Auth::user();
 
- /**
-     * Effectue l'achat de la cryptomonnaie.
-     *
-     * @param  Request  $request
-     * @param  API  $api
-     * @return \Illuminate\Http\Response
-     */
-    public function purchaseCrypto(Request $request, API $api)
-    {
-        // Validez les données de la requête
+        // Validez les données reçues depuis la requête (par exemple, la quantité, le prix, etc.)
         $validator = Validator::make($request->all(), [
-            'currency_id' => 'required|integer', // Utilisez 'currency_id' conformément à votre schéma de base de données
-            'user_id' => 'required|integer', // Ajoutez la validation de l'ID de l'utilisateur
-            'amount' => 'nullable|numeric|min:0.01', // Le montant est facultatif s'il s'agit d'une quantité
-            'quantity' => 'nullable|numeric|min:0.000001', // La quantité est facultative s'il s'agit d'un montant
-            'purchase_price' => 'required|numeric|min:0.000000001', // Ajoutez la validation du prix d'achat
-            'purchase_date' => 'required|date_format:Y-m-d\TH:i:sP', // Utilisez le format ISO pour la date
+            'crypto_id' => 'required|integer', // ID de la crypto-monnaie
+            'quantity' => 'required|numeric',  // Quantité achetée
+            'purchase_price' => 'required|numeric',  // Prix d'achat
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response()->json(['error' => $validator->errors()], 400);
         }
 
-        try {
-            // Récupérez les données de la requête
-            $data = $request->only(['currency_id', 'user_id', 'amount', 'quantity', 'purchase_price', 'purchase_date']);
+        // Créez une nouvelle transaction d'achat
+        $transaction = new Transaction([
+            'crypto_id' => $request->crypto_id,
+            'quantity' => $request->quantity,
+            'purchase_price' => $request->purchase_price,
+            'purchase_date' => now(), // Date d'achat actuelle
+            'user_id' => $user->id, // Assurez-vous d'associer la transaction à l'utilisateur connecté
+        ]);
 
-            // Créez une nouvelle transaction
-            $transaction = new Transaction([
-                'currency_id' => $data['currency_id'],
-                'user_id' => $data['user_id'],
-                'amount' => $data['amount'],
-                'quantity' => $data['quantity'],
-                'purchase_price' => $data['purchase_price'],
-                'purchase_date' => $data['purchase_date'],
-            ]);
+        // Enregistrez la transaction dans la base de données
+        $transaction->save();
 
-            $transaction->save();
+        // Vous pouvez également effectuer d'autres opérations ici, telles que la mise à jour du solde de l'utilisateur, etc.
 
-            return response()->json(['message' => 'Achat de cryptomonnaie réussi', 'transaction' => $transaction], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erreur lors de l\'achat de cryptomonnaie'], 500);
-        }
+        // Répondez avec un message de réussite ou les détails de la transaction
+        return response()->json(['message' => 'Transaction d\'achat réussie', 'transaction' => $transaction], 200);
+    } else {
+        // L'utilisateur n'est pas connecté, renvoyez une réponse d'erreur
+        return response()->json(['message' => 'Utilisateur non connecté'], 401);
     }
+}
+
 
 
 

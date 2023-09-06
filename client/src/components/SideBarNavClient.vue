@@ -74,23 +74,24 @@ function logout() {
   try {
     // Send a POST request to logout endpoint
     axios
-      .post(
+      .get(
         "http://127.0.0.1:8000/api/logout",
-        {},
         {
           // Define request headers
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Origin": "*",
           },
+          withCredentials:true,
         }
       )
       .then((res) => {
         console.log(res);
         // If logout is successful, navigate to the home page
-        if (res.status === 204) {
+        if (res.status === 200) {
           router.push("/");
+          
         }
       });
 

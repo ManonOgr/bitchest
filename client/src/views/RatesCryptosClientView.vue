@@ -26,7 +26,7 @@
                 <v-btn class="btn" color="#80CBC4" @click="showCryptoChart(crypto.id)">Voir les cours</v-btn>
               </td>
               <td>
-                <v-btn class="btn" color="pink" @click="openPurchasePopup(crypto)">Achat</v-btn>
+                <v-btn class="btn" color="pink" @click="openPurchasePopup(crypto)" v-if="isUserAuthenticated">Achat</v-btn>
               </td>
             </tr>
           </tbody>
@@ -48,7 +48,7 @@
           <v-text-field v-model="selectedQuantity" label="Quantité"></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="confirmPurchase">Valider</v-btn>
+          <v-btn color="primary" @click="confirmPurchase" v-if="isUserAuthenticated">Valider</v-btn>
           <v-btn color="red" @click="cancelPurchase">Annuler</v-btn>
         </v-card-actions>
       </v-card>
@@ -65,6 +65,11 @@ export default {
   components: {
     SidebarNavClient,
     CryptoChartDialog, 
+  },
+  computed: {
+    isUserAuthenticated() {
+      return !!this.$store.state.userData; // Vérifiez si l'utilisateur est authentifié
+    },
   },
   data() {
     return {
@@ -85,7 +90,7 @@ export default {
     async fetchCryptos() {
       const URL = "http://localhost:8000/api/currencies";
       try {
-        const response = await axios.get(URL);
+        const response = await axios.get(URL, {withCredentials:true});
         this.cryptos = response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -101,6 +106,7 @@ export default {
         this.cryptos.forEach((crypto, index) => {
           crypto.history = response.data[index];
         });
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -121,15 +127,50 @@ export default {
       this.selectedQuantity = 0; // Réinitialiser la quantité
       this.purchaseDialog = true;
     },
-    confirmPurchase() {
-      // Implémentez la logique d'achat ici
-      // Vous pouvez utiliser this.selectedCrypto et this.selectedQuantity
-      // pour effectuer l'achat. Une fois l'achat terminé, fermez la popup.
-      // Vous pouvez également mettre à jour la liste des transactions, etc.
-      
-      // Après l'achat, fermez la popup
-      this.purchaseDialog = false;
-    },
+  
+    async confirmPurchase() {
+  try {
+    // Vérifiez d'abord si l'utilisateur est connecté en lisant le token de session depuis localStorage
+    const sessionToken = localStorage.getItem('user');
+
+    if (!sessionToken) {
+      console.error("L'utilisateur n'est pas connecté.");
+      // Vous pouvez afficher un message à l'utilisateur ou le rediriger vers la page de connexion ici
+      return;
+    }
+
+    console.log("Données de l'utilisateur depuis le store:", this.$store.state.userData);
+
+    // Créez un objet de données pour la transaction
+    const transactionData = {
+      crypto_id: this.selectedCrypto.id,
+      quantity: this.selectedQuantity,
+      purchase_price: this.getCryptoQuoting(this.selectedCrypto),
+      // Ajoutez d'autres données de transaction si nécessaire
+    };
+
+    const headers = {
+      Authorization: `Bearer ${sessionToken}`,
+    };
+
+    // Ensuite, utilisez ces en-têtes dans votre requête Axios
+    const response = await axios.post("http://localhost:8000/api/purchase", transactionData,  { withCredentials:true}, {
+      headers: headers,  
+    });
+
+    // Traitez la réponse si nécessaire
+    console.log("Transaction enregistrée avec succès", response.data);
+
+    // Après l'achat, fermez la popup
+    this.purchaseDialog = false;
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de la transaction:", error);
+  }
+},
+
+
+
+
     cancelPurchase() {
       // Annuler l'achat et fermer la popup
       this.purchaseDialog = false;

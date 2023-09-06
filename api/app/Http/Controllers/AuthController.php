@@ -2,76 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;  // Import the User model to interact with the users table
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;  // Import the Auth facade to manage authentication
-use Illuminate\Support\Facades\Hash;  // Import the Hash facade for password hashing
-use Illuminate\Support\Facades\Validator;  // Import the Validator facade for data validation
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     // Logout method
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();  // Logout the authenticated user
+        // Récupérez l'utilisateur authentifié
 
-        return response()->noContent();  // Return an empty response (204 No Content)
+
+        // Vérifiez si l'utilisateur a un token actuel
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        // Retournez une réponse de succès
+        return response()->json(['message' => 'Logout successful'], 200);
     }
 
     // Login method
     public function login(Request $request)
     {
+        // Validation des données entrées par l'utilisateur
         $validate = Validator::make($request->all(), [
-            'email' => 'required|email',  // Validation: email field required and must be in email format
-            'password' => 'required',  // Validation: password field required
+            'email' => 'required|email',  // Validation: champ email requis et doit être au format email
+            'password' => 'required',  // Validation: champ mot de passe requis
         ]);
 
-        // If validation fails, return a response with validation errors
+        // Si la validation échoue, retournez une réponse avec les erreurs de validation
         if ($validate->fails()) {
             return response()->json(['message' => 'Validation failed', 'errors' => $validate->errors()], 422);
         }
 
-        $user = User::where('email', $request->email)->first();  // Find user by email
-        if (!$user) {
-            return response()->json(['errors' => 'Wrong credentials'], 401);  // Incorrect credentials
+        // Tentative de connexion de l'utilisateur
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user(); // Récupérez l'utilisateur authentifié
+            // $request->session()->regenerate();
+            // Générez un token pour l'utilisateur connecté
+
+            // Stockez le token dans la base de données (champ remember_token
+
+            return response()->json(['user' => $user], 200);
         }
 
-        $password = $request->password;
-        if (!Hash::check($password, $user->password)) {
-            return response()->json(['errors' => 'Wrong credentials'], 403);  // Incorrect credentials
-        }
-
-        $token = $user->remember_token;  // Get the user's remember token
-
-        return response()->json(['accessToken' => $token, "user" => $user], 202);  // Return the token and details of the authenticated user
-
-        $user = Auth::user();  // Get the authenticated user using Laravel's authentication system
-
-        return response()->json(['message' => 'Unknown role'], 403);  // If the role is neither admin nor client, return a forbidden response
+        // Si l'authentification échoue, retournez une réponse d'erreur
+        return response()->json(['message' => 'Wrong credentials'], 401);
     }
 
-    public function index()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(User $user)
-    {
-        //
-    }
-
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    public function destroy(User $user)
-    {
-        //
-    }
+    // Vos autres méthodes de contrôleur (index, store, show, update, destroy) peuvent rester inchangées
 }

@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route for user login
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/logout', [AuthController::class, 'logout']);
 // Route for user logout
-Route::post('/logout', [AuthController::class, 'logout']);
 
 // Route to get all users
 Route::get('/users', [UserController::class, 'getUsers']);
@@ -67,5 +67,5 @@ Route::get('user-transactions/{userId}', [TransactionController::class, 'getUser
 // Route to sell crypto for ID
 Route::delete('/sell-crypto/{id}', [TransactionController::class, 'sellCrypto']);
 
-// Route to buy a crypto
-Route::post('/purchase-crypto', [TransactionController::class, 'purchaseCrypto']);
+// Route to purchase crypto
+Route::post('/purchase', [TransactionController::class, 'purchaseCrypto']);

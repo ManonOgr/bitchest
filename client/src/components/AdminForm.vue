@@ -6,13 +6,13 @@
       alt="logo"
       style="max-width: 100%; height: auto"
     />
-    <form>
+    <form @submit.prevent="formSubmit">
       <!-- Email input -->
       <div class="user-box">
         <input
           type="email"
           name="email"
-          required=""
+          required
           placeholder="email"
           v-model="form.email"
         />
@@ -23,14 +23,14 @@
         <input
           type="password"
           name="password"
-          required=""
+          required
           placeholder="password"
           v-model="form.password"
         />
         <label></label>
       </div>
       <!-- Login button -->
-      <v-btn variant="tonal" @click.prevent="formSubmit">Login</v-btn>
+      <button type="submit" variant="tonal">Login</button>
     </form>
   </div>
 </template>
@@ -51,37 +51,40 @@ export default {
   methods: {
     async formSubmit() {
       try {
+        // Effectuer une requête pour obtenir le jeton CSRF
+        await axios.get("/sanctum/csrf-cookie");
+
+        // Effectuer la demande de connexion
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/login", // API endpoint for user login
+          "/api/login", // Utilisez une URL relative
           {
             email: this.form.email,
             password: this.form.password,
           },
           {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
+            withCredentials:true,
           }
         );
 
         const userData = response.data.user;
-        // Store user data in Vuex or other suitable state management
+        // Stocker les données de l'utilisateur dans Vuex ou un autre gestionnaire d'état approprié
         this.$store.commit("setUserData", userData);
 
+        localStorage.setItem("user", response.data.accessToken);
+
         if (userData.status === "client") {
-          router.push("/dashboardclient"); // Redirect to client dashboard
+          router.push("/dashboardclient"); // Rediriger vers le tableau de bord du client
         } else if (userData.status === "admin") {
-          router.push("/dashboardadmin"); // Redirect to admin dashboard
+          router.push("/dashboardadmin"); // Rediriger vers le tableau de bord de l'administrateur
         }
       } catch (error) {
-        console.log("Error during request: ", error);
+        console.log("Erreur lors de la requête :", error);
         if (
           error.response &&
           error.response.data &&
           error.response.data.errors
         ) {
-          console.log("Validation errors: ", error.response.data.errors);
+          console.log("Erreurs de validation :", error.response.data.errors);
         }
       }
     },

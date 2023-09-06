@@ -14,11 +14,11 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:users', // Ensure email is unique in the 'users' table
-            'password' => 'required|min:6', // Password must be at least 6 characters long
-            'status' => 'required|in:client,admin', // Status must be 'client' or 'admin'
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+            'status' => 'required|in:client,admin',
         ], [
-            'email.unique' => 'This email is already used by another user.', // Custom error message for unique email validation
+            'email.unique' => 'This email is already used by another user.',
         ]);
 
         // Create a new User instance and populate its attributes
@@ -42,11 +42,11 @@ class UserController extends Controller
     }
 
     public function getUserById($id)
-{
-    $user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-    return response()->json($user);
-}
+        return response()->json($user);
+    }
 
     // Update user details
     public function update(Request $request, $id)
@@ -57,7 +57,7 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id, // Ensure email is unique, excluding the current user's email
+            'email' => 'required|email|unique:users,email,' . $user->id, 
             'status' => 'required|in:client,admin',
         ]);
 

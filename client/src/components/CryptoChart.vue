@@ -10,7 +10,7 @@ import "chartjs-adapter-date-fns";
 
 export default {
   props: {
-    cryptoId: Number, // Prop pour recevoir l'ID de la crypto
+    cryptoId: Number, // Prop to receive the crypto ID
   },
   data() {
     return {
@@ -18,11 +18,11 @@ export default {
     };
   },
   mounted() {
-    // Code pour générer le graphique en fonction de l'ID de la crypto
-    // Utilisez l'ID pour récupérer les données du graphique spécifique à cette crypto
+    // Code to generate the chart based on the crypto ID
+    // Use the ID to fetch data for the specific crypto chart
     const cryptoData = this.getCryptoData(this.cryptoId);
 
-    // Configuration du graphique
+    // Chart configuration
     const ctx = this.$refs.cryptoChartCanvas.getContext("2d");
     this.chart = new Chart(ctx, {
       type: "line",
@@ -30,7 +30,7 @@ export default {
         labels: cryptoData.labels,
         datasets: [
           {
-            label: `Cours de la crypto ${this.cryptoId}`,
+            label: `Crypto ${this.cryptoId} Price`,
             data: cryptoData.values,
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
@@ -45,7 +45,7 @@ export default {
             time: {
               unit: "day",
               displayFormats: {
-                day: "MMM d", // Format d'affichage de la date
+                day: "MMM d", // Date display format
               },
             },
           },
@@ -53,21 +53,21 @@ export default {
             beginAtZero: false,
             title: {
               display: true,
-              text: "Variation de cotation",
+              text: "Price Variation",
             },
           },
         },
         title: {
           display: true,
-          text: `Cours de la crypto ${this.cryptoId}`,
+          text: `Crypto ${this.cryptoId} Price`,
         },
       },
     });
   },
   methods: {
-    // Code pour récupérer les données du graphique spécifique à cette crypto en fonction de son ID
+    // Code to fetch data for the specific crypto chart based on its ID
     getCryptoData(cryptoId) {
-      // Utilisez l'ID pour générer des données de graphique fictives en utilisant les fonctions PHP
+      // Use the ID to generate fictional chart data using PHP-like functions
       const labels = [];
       const values = [];
       for (let i = 0; i < 30; i++) {
@@ -80,9 +80,9 @@ export default {
 
       return { labels, values };
     },
-    // Fonction pour générer la variation de cotation de la crypto monnaie sur un jour
+    // Function to generate crypto currency price variation for a day
     getCotationFor(cryptoId) {
-      // Utilisez les fonctions PHP pour générer des données de cotation fictives
+      // Use PHP-like functions to generate fictional price data
       const cryptoName = `Crypto ${cryptoId}`;
       return (
         (Math.random() > 0.4 ? 1 : -1) *

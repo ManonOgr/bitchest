@@ -23,18 +23,18 @@
 </template>
 
 <script>
-import SidebarNav from '@/components/SideBarNav.vue'; // Importing the SidebarNav component
-import DashboardAdmin from '@/components/DashboardAdmin.vue'; // Importing the DashboardAdmin component
+import SidebarNav from "@/components/SideBarNav.vue"; // Importing the SidebarNav component
+import DashboardAdmin from "@/components/DashboardAdmin.vue"; // Importing the DashboardAdmin component
 
 export default {
   components: {
     SidebarNav, // Registering the SidebarNav component
-    DashboardAdmin // Registering the DashboardAdmin component
+    DashboardAdmin, // Registering the DashboardAdmin component
   },
   data() {
     return {
-      drawer: false // Data property for controlling the sidebar drawer state
+      drawer: false, // Data property for controlling the sidebar drawer state
     };
-  }
+  },
 };
 </script>

@@ -1,13 +1,18 @@
 <template>
+  <!-- Vue app container -->
   <v-app>
     <!-- Client-specific sidebar navigation component -->
     <SideBarNavClient />
 
+    <!-- App bar for the application -->
     <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Portefeuille</v-toolbar-title>
+      <!-- Title for the app bar -->
+      <v-toolbar-title>Portfolio</v-toolbar-title>
     </v-app-bar>
 
+    <!-- Main content area -->
     <v-main>
       <v-container>
         <h1>Liste de mes Cryptos</h1>
@@ -17,6 +22,7 @@
           <v-table height="570px">
             <thead>
               <tr>
+                <!-- Table headers -->
                 <th class="text-left id-column">Crypto ID</th>
                 <th class="text-left">Nom de la crypto</th>
                 <th class="text-left">Quantité</th>
@@ -24,7 +30,6 @@
                 <th class="text-left">Prix d'achat</th>
                 <th class="text-left">Prix de vente</th>
                 <th class="text-left">Plus Value</th>
-                <!-- New column for Plus Value -->
                 <th class="text-left">Actions</th>
               </tr>
             </thead>
@@ -73,7 +78,7 @@
       </v-container>
     </v-main>
 
-    <!-- Boîte de dialogue de confirmation de vente -->
+    <!-- Sell confirmation dialog -->
     <v-dialog v-model="sellDialog" max-width="400px">
       <v-card>
         <v-card-title>Confirmation de la vente</v-card-title>
@@ -103,7 +108,7 @@ export default {
       fakeAccountBalance: 0,
       sellDialog: false,
       transactionToSell: null,
-      sellingInProgress: false, // État de la vente en cours
+      sellingInProgress: false,
     };
   },
   computed: {
@@ -125,10 +130,10 @@ export default {
       if (this.$store.state.userData) {
         const userId = this.$store.state.userData.id;
 
-        // Utilisez l'ID de l'utilisateur pour générer une donnée fictive unique
-        const randomSeed = userId * 1000; // Utilisez une valeur basée sur l'ID de l'utilisateur
+        // Use user ID to generate a unique random data
+        const randomSeed = userId * 1000; // Use a value based on user ID
 
-        // Générez une donnée fictive unique pour cet utilisateur
+        // Generate unique fake data for this user
         this.fakeAccountBalance = Math.floor(
           Math.random() * (1000 - 1000 + 1) + 1000 + randomSeed
         );
@@ -158,7 +163,7 @@ export default {
     async calculateTotalBalanceEuros() {
       let totalBalanceEuros = 0;
       for (const transaction of this.userTransactions) {
-        // Calculez le total de chaque transaction en euros
+        // Calculate the total of each transaction in euros
         const transactionTotal =
           transaction.quantity * transaction.purchase_price;
         totalBalanceEuros += transactionTotal;
@@ -168,10 +173,10 @@ export default {
 
     async sellCrypto(transaction) {
       try {
-        // Supprimer la transaction de la base de données
+        // Remove the transaction from the database
         await axios.delete(`/api/transactions/${transaction.id}`);
 
-        // Mise à jour de l'interface utilisateur : Suppression de la transaction de la liste
+        // Update the UI: Remove the transaction from the list
         const index = this.userTransactions.findIndex(
           (t) => t.id === transaction.id
         );
@@ -179,7 +184,7 @@ export default {
           this.userTransactions.splice(index, 1);
         }
 
-        // Mettez à jour le solde fictif du compte
+        // Update the fake account balance
         if (
           !isNaN(this.fakeAccountBalance) &&
           !isNaN(transaction.selling_price)
@@ -189,16 +194,16 @@ export default {
           console.log("Invalid value for fakeAccountBalance or selling_price.");
         }
 
-        // Recalculez le solde total en euros
+        // Recalculate the total balance in euros
         this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
 
-        // Affichez un message de réussite (vous pouvez le remplacer par votre propre mécanisme de notification)
-        console.log(`Vente confirmée pour : ${transaction.currency_name}`);
+        // Display a success message (you can replace this with your own notification mechanism)
+        console.log(`Sale confirmed for: ${transaction.currency_name}`);
 
-        // Fermez automatiquement la boîte de dialogue après la confirmation
+        // Automatically close the dialog after confirmation
         this.sellDialog = false;
 
-        // Définissez sellingInProgress sur false pour indiquer que la vente est terminée
+        // Set sellingInProgress to false to indicate that the sale is complete
         this.sellingInProgress = false;
       } catch (error) {
         console.log("Error during selling operation: ", error);
@@ -211,8 +216,8 @@ export default {
     },
 
     cancelSellCrypto() {
-    this.sellDialog = false;
-  },
+      this.sellDialog = false;
+    },
 
     isNegativeCapitalGain(transaction) {
       if (

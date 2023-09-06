@@ -51,40 +51,40 @@ export default {
   methods: {
     async formSubmit() {
       try {
-        // Effectuer une requête pour obtenir le jeton CSRF
+        // Perform a request to get the CSRF token
         await axios.get("/sanctum/csrf-cookie");
 
-        // Effectuer la demande de connexion
+        // Perform the login request
         const response = await axios.post(
-          "/api/login", // Utilisez une URL relative
+          "/api/login", // Use a relative URL
           {
             email: this.form.email,
             password: this.form.password,
           },
           {
-            withCredentials:true,
+            withCredentials: true,
           }
         );
 
         const userData = response.data.user;
-        // Stocker les données de l'utilisateur dans Vuex ou un autre gestionnaire d'état approprié
+        // Store user data in Vuex or another appropriate state manager
         this.$store.commit("setUserData", userData);
 
         localStorage.setItem("user", response.data.accessToken);
 
         if (userData.status === "client") {
-          router.push("/dashboardclient"); // Rediriger vers le tableau de bord du client
+          router.push("/dashboardclient"); // Redirect to the client dashboard
         } else if (userData.status === "admin") {
-          router.push("/dashboardadmin"); // Rediriger vers le tableau de bord de l'administrateur
+          router.push("/dashboardadmin"); // Redirect to the admin dashboard
         }
       } catch (error) {
-        console.log("Erreur lors de la requête :", error);
+        console.log("Error during the request:", error);
         if (
           error.response &&
           error.response.data &&
           error.response.data.errors
         ) {
-          console.log("Erreurs de validation :", error.response.data.errors);
+          console.log("Validation errors:", error.response.data.errors);
         }
       }
     },

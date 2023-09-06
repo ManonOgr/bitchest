@@ -5,7 +5,9 @@
       <v-container>
         <v-card>
           <!-- Card title displaying Client Information -->
-          <v-card-title>Informations : {{ firstName }} {{ lastName }}</v-card-title>
+          <v-card-title
+            >Informations : {{ firstName }} {{ lastName }}</v-card-title
+          >
           <v-card-text>
             <!-- Display user details -->
             <p><strong>Nom:</strong> {{ lastName }}</p>
@@ -20,7 +22,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {

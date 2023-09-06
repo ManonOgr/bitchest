@@ -1,25 +1,25 @@
-// Importez la fonction createStore de la bibliothèque Vuex
+// Import the createStore function from the Vuex library
 import { createStore } from "vuex";
 
-// Créez et exportez une instance du store Vuex
+// Vuex store instance
 export default createStore({
   state: {
-    userData: null, // Propriété d'état pour stocker les données de l'utilisateur
+    userData: null, // State property to store user data
   },
   mutations: {
-    // Mutation pour définir les données de l'utilisateur dans l'état
+    // Mutation to set user data in the state
     setUserData(state, userData) {
       state.userData = userData;
     },
   },
   actions: {
-    // Action pour mettre à jour les données de l'utilisateur
+    // Action to update user data
     updateUserData(context, userData) {
       context.commit("setUserData", userData);
     },
   },
   getters: {
-    // Getter pour accéder aux données de l'utilisateur
+    // Getter to access user data
     getUserData(state) {
       return state.userData;
     },

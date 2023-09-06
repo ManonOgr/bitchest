@@ -23,18 +23,18 @@
 </template>
 
 <script>
-import SidebarNavClient from '@/components/SideBarNavClient.vue'; // Importing the Client-specific SidebarNav component
-import DashboardClient from '@/components/DashboardClient.vue'; // Importing the Client-specific Dashboard component
+import SidebarNavClient from "@/components/SideBarNavClient.vue"; // Importing the Client-specific SidebarNav component
+import DashboardClient from "@/components/DashboardClient.vue"; // Importing the Client-specific Dashboard component
 
 export default {
   components: {
     SidebarNavClient, // Registering the Client-specific SidebarNav component
-    DashboardClient // Registering the Client-specific Dashboard component
+    DashboardClient, // Registering the Client-specific Dashboard component
   },
   data() {
     return {
-      drawer: false // Data property for controlling the sidebar drawer state
+      drawer: false, // Data property for controlling the sidebar drawer state
     };
-  }
+  },
 };
 </script>

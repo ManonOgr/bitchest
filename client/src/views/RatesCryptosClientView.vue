@@ -1,21 +1,28 @@
 <template>
+  <!-- Vue app container -->
   <v-app>
+    <!-- Sidebar navigation component -->
     <sidebar-nav-client></sidebar-nav-client>
+
+    <!-- App bar for the application -->
     <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Cours des cryptos</v-toolbar-title>
     </v-app-bar>
+
+    <!-- Main content area -->
     <v-main>
       <v-container>
         <v-table>
           <thead>
             <tr>
+              <!-- Table headers -->
               <th class="text-left">Id</th>
               <th class="text-left">Nom</th>
               <th class="text-left">Cours</th>
               <th class="text-left">Action</th>
               <th class="text-left">Achat</th>
-              <!-- Nouvelle colonne "Achat" -->
             </tr>
           </thead>
           <tbody>
@@ -73,7 +80,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Message de confirmation d'achat -->
+
+    <!-- Purchase confirmation message -->
     <v-snackbar
       v-if="purchaseSuccessMessage"
       v-model="purchaseSuccessMessage"
@@ -113,11 +121,13 @@ export default {
     };
   },
   mounted() {
+    // Fetch crypto data and history on component mount
     this.fetchCryptos();
     this.fetchHistory();
   },
   methods: {
     async fetchCryptos() {
+      // Fetch cryptocurrency data
       const URL = "http://localhost:8000/api/currencies";
       try {
         const response = await axios.get(URL, { withCredentials: true });
@@ -127,9 +137,11 @@ export default {
       }
     },
     getCryptoQuoting(crypto) {
+      // Get crypto quoting or display "N/A" if data is missing
       return crypto.history ? crypto.history.quoting : "N/A";
     },
     async fetchHistory() {
+      // Fetch cryptocurrency history data
       const URL = "http://localhost:8000/api/history";
       try {
         const response = await axios.get(URL);
@@ -141,21 +153,25 @@ export default {
       }
     },
     showCryptoChart(cryptoId) {
+      // Open CryptoChartDialog with selected crypto data
       this.selectedCrypto = this.cryptos.find(
         (crypto) => crypto.id === cryptoId
       );
       this.selectedCryptoId = cryptoId;
     },
     closeCryptoChartDialog() {
+      // Close CryptoChartDialog
       this.selectedCrypto = null;
       this.selectedCryptoId = null;
     },
     openPurchasePopup(crypto) {
+      // Open purchase dialog for the selected crypto
       this.selectedCrypto = crypto;
       this.selectedQuantity = 0;
       this.purchaseDialog = true;
     },
     async confirmPurchase() {
+      // Confirm purchase of crypto
       if (this.selectedQuantity <= 0) {
         return;
       }

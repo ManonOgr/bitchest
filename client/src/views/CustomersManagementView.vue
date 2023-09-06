@@ -10,6 +10,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <!-- Title for the app bar -->
       <v-toolbar-title>Gestion Client</v-toolbar-title>
+      <!-- Client Management -->
     </v-app-bar>
 
     <!-- Main content area -->
@@ -17,8 +18,10 @@
       <v-container>
         <div class="pa-2">
           <h1 class="headline">Liste des utilisateurs</h1>
+          <!-- List of users -->
           <v-responsive>
             <v-btn color="success" @click="openAddUserDialog">Ajouter</v-btn>
+            <!-- Add -->
             <v-table height="570px">
               <thead>
                 <tr>
@@ -46,6 +49,7 @@
                       color="error"
                     >
                       Supprimer
+                      <!-- Delete -->
                     </v-btn>
                   </td>
                   <td class="text-left">
@@ -55,6 +59,7 @@
                       @click="openEditDialog(user)"
                     >
                       Modifier
+                      <!-- Edit -->
                     </v-btn>
                   </td>
                 </tr>
@@ -69,12 +74,16 @@
     <v-dialog v-model="deleteDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Confirmation</v-card-title>
+        <!-- Confirmation -->
         <v-card-text>
           Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+          <!-- Are you sure you want to delete this user? -->
         </v-card-text>
         <v-card-actions>
           <v-btn color="error" @click="deleteUserConfirmed">Supprimer</v-btn>
+          <!-- Delete -->
           <v-btn text @click="deleteDialog = false">Annuler</v-btn>
+          <!-- Cancel -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -83,6 +92,7 @@
     <v-dialog v-model="editDialog" max-width="600">
       <v-card>
         <v-card-title class="headline">Modifier un utilisateur</v-card-title>
+        <!-- Edit User -->
         <v-card-text>
           <v-form @submit.prevent="showEditConfirmationDialog">
             <!-- Form fields for user data -->
@@ -91,19 +101,20 @@
               label="Prénom"
               required
             ></v-text-field>
+            <!-- First Name -->
             <v-text-field
               v-model="userData.last_name"
               label="Nom"
               required
             ></v-text-field>
+            <!-- Last Name -->
             <v-text-field
               v-model="userData.email"
               label="Email"
               type="email"
               required
             ></v-text-field>
-            <div>
-              <!-- Dropdown for user status selection -->
+            <!-- Email -->
             <div>
         <!-- Dropdown for user status selection -->
               <select id="status" v-model="userData.status" required>
@@ -112,7 +123,6 @@
                 <option value="admin">Admin</option>
               </select>
             </div>
-            </div>
             <!-- Button to confirm the update -->
             <v-btn @click="showEditConfirmationDialog" depressed color="purple">Modifier</v-btn>
           </v-form>
@@ -120,6 +130,7 @@
         <v-card-actions>
           <!-- Button to close the edit popup -->
           <v-btn @click="closeEditDialog" text>Annuler</v-btn>
+          <!-- Cancel -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -130,10 +141,13 @@
         <v-card-title class="headline">Confirmation de modification</v-card-title>
         <v-card-text>
           Êtes-vous sûr de vouloir appliquer ces modifications ?
+          <!-- Are you sure you want to apply these changes? -->
         </v-card-text>
         <v-card-actions>
           <v-btn color="purple" @click="updateUser">Oui</v-btn>
+          <!-- Yes -->
           <v-btn text @click="confirmEditDialog = false">Non</v-btn>
+          <!-- No -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -142,6 +156,7 @@
     <v-dialog v-model="addUserDialog" max-width="600">
       <v-card>
         <v-card-title class="headline">Ajouter un utilisateur</v-card-title>
+        <!-- Add User -->
         <v-card-text>
           <v-form @submit.prevent="addUser">
             <!-- Champs de formulaire pour les données de l'utilisateur -->
@@ -150,23 +165,27 @@
               label="Prénom"
               required
             ></v-text-field>
+            <!-- First Name -->
             <v-text-field
               v-model="userData.last_name"
               label="Nom"
               required
             ></v-text-field>
+            <!-- Last Name -->
             <v-text-field
               v-model="userData.email"
               label="Email"
               type="email"
               required
             ></v-text-field>
+            <!-- Email -->
             <v-text-field
               v-model="userData.password"
               label="Mot de passe"
               type="password"
               required
             ></v-text-field>
+            <!-- Password -->
             <div>
               <!-- Menu déroulant pour la sélection du statut de l'utilisateur -->
               <select id="status" v-model="userData.status" required>
@@ -177,11 +196,13 @@
             </div>
             <!-- Bouton pour confirmer l'ajout -->
             <v-btn @click="addUser" depressed color="success">Ajouter</v-btn>
+            <!-- Add -->
           </v-form>
         </v-card-text>
         <v-card-actions>
           <!-- Bouton pour fermer la boîte de dialogue d'ajout d'utilisateur -->
           <v-btn @click="closeAddUserDialog" text>Annuler</v-btn>
+          <!-- Cancel -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -275,7 +296,7 @@ export default {
     },
     openAddUserDialog() {
       this.addUserDialog = true;
-      // Réinitialisez les champs de saisie pour l'ajout d'utilisateur
+      // Reset input fields for adding a user
       this.userData = {
         id: null,
         first_name: "",
@@ -294,12 +315,12 @@ export default {
         .then(response => {
           console.log(response.data.message);
 
-          // Ajoutez le nouvel utilisateur à la liste des utilisateurs
+          // Add the new user to the list of users
           this.users.push({ ...this.userData, id: response.data.id });
 
-          this.addUserDialog = false; // Fermez la boîte de dialogue d'ajout d'utilisateur
+          this.addUserDialog = false; 
 
-          // Rechargez le tableau après l'ajout d'un utilisateur
+          // Reload the table after adding a user
           this.fetchUsers();
         })
         .catch(error => {

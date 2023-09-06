@@ -63,12 +63,12 @@ const router = createRouter({
       component: CustomersManagementView,
       meta: { requiresAuth: true, roles: ["admin"] }, // Additional metadata for authentication and authorization
     },
-      // Route for graphcrypto
-      {
-        path: "/graphcrypto",
-        name: "graphcrypto",
-        component: GraphView,
-      },
+    // Route for graphcrypto
+    {
+      path: "/graphcrypto",
+      name: "graphcrypto",
+      component: GraphView,
+    },
   ],
 });
 

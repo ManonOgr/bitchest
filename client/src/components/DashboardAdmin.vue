@@ -5,7 +5,9 @@
       <v-container>
         <v-card>
           <!-- Card title showing Admin Information -->
-          <v-card-title>Information: {{ firstName }} {{ lastName }}</v-card-title>
+          <v-card-title
+            >Information: {{ firstName }} {{ lastName }}</v-card-title
+          >
           <v-card-text>
             <!-- Display user details -->
             <p><strong>Nom:</strong> {{ lastName }}</p>

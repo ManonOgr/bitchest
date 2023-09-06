@@ -71,7 +71,7 @@ const sessionToken = localStorage.getItem("user");
 const route = useRoute();
 
 // Add a ref for controlling the sidebar
-const drawer = ref(false);
+const drawer = ref(true);
 
 // Function to toggle the sidebar
 function toggleSidebar() {

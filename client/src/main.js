@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './routers';
 import store from './store/index';
+import '@/assets/css/mdi.css'; // Remplacez par le chemin vers votre fichier mdi.css
 
 import axios from 'axios';
 axios.defaults.baseURL = "http://localhost:8000/";

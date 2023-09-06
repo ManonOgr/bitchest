@@ -73,6 +73,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Message de confirmation d'achat -->
+    <v-snackbar
+      v-if="purchaseSuccessMessage"
+      v-model="purchaseSuccessMessage"
+      timeout="2000"
+      color="success"
+    >
+      {{ purchaseSuccessMessage }}
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -88,18 +97,19 @@ export default {
   },
   computed: {
     isUserAuthenticated() {
-      return !!this.$store.state.userData; // Vérifiez si l'utilisateur est authentifié
+      return !!this.$store.state.userData;
     },
   },
   data() {
     return {
       drawer: false,
       cryptos: [],
-      purchaseDialog: false, // État de la popup d'achat
+      purchaseDialog: false,
       selectedCryptoId: null,
       selectedQuantity: 0,
       transactions: [],
       selectedCrypto: null,
+      purchaseSuccessMessage: null,
     };
   },
   mounted() {
@@ -131,82 +141,65 @@ export default {
       }
     },
     showCryptoChart(cryptoId) {
-      // Ouvrir le dialogue CryptoChartDialog avec les données de la crypto sélectionnée
       this.selectedCrypto = this.cryptos.find(
         (crypto) => crypto.id === cryptoId
       );
       this.selectedCryptoId = cryptoId;
     },
     closeCryptoChartDialog() {
-      // Fermer le dialogue CryptoChartDialog
       this.selectedCrypto = null;
       this.selectedCryptoId = null;
     },
     openPurchasePopup(crypto) {
-      // Ouvrir la popup d'achat et définir la crypto sélectionnée
       this.selectedCrypto = crypto;
-      this.selectedQuantity = 0; // Réinitialiser la quantité
+      this.selectedQuantity = 0;
       this.purchaseDialog = true;
     },
-
     async confirmPurchase() {
       if (this.selectedQuantity <= 0) {
-        // Gérez le cas où la quantité choisie est invalide (par exemple, négative ou nulle).
-        // Vous pouvez afficher un message d'erreur à l'utilisateur.
         return;
       }
-      const minSellingPrice = 1000; // Prix minimum (1000 euros)
-      const maxSellingPrice = 10000; // Prix maximum (10000 euros)
 
-      const minPurchasePrice = 1000; // Prix minimum (1000 euros)
-      const maxPurchasePrice = 20000; // Prix maximum (10000 euros)
+      const minSellingPrice = 1000;
+      const maxSellingPrice = 10000;
+
+      const minPurchasePrice = 1000;
+      const maxPurchasePrice = 20000;
 
       const randomPurchasePrice =
         Math.random() * (maxSellingPrice - minSellingPrice) + minSellingPrice;
-      
-        const randomSellingPrice =
-        Math.random() * (maxPurchasePrice - minPurchasePrice) + minPurchasePrice;
 
+      const randomSellingPrice =
+        Math.random() * (maxPurchasePrice - minPurchasePrice) +
+        minPurchasePrice;
 
       const transactionData = {
         currency_id: this.selectedCrypto.id,
         quantity: this.selectedQuantity,
-        purchase_price: randomPurchasePrice, 
-        selling_price: randomSellingPrice, 
-        // Remplacez ceci par le prix réel de la crypto, si disponible
+        purchase_price: randomPurchasePrice,
+        selling_price: randomSellingPrice,
       };
 
       try {
-        // Effectuez un appel Axios pour envoyer les données de la transaction à la route d'achat
         const response = await axios.post("/api/purchase", transactionData, {
           withCredentials: true,
         });
 
-        // Traitez la réponse de l'API en conséquence
         if (response.status === 200) {
-          // La transaction a été réussie, vous pouvez effectuer des actions supplémentaires si nécessaire
-          // Par exemple, mettez à jour le solde de l'utilisateur, ajoutez la transaction à la liste locale, etc.
-
-          // Réinitialisez la quantité sélectionnée
           this.selectedQuantity = 0;
-
-          // Fermez la popup d'achat
           this.purchaseDialog = false;
-
-          // Affichez un message de succès ou effectuez d'autres actions nécessaires
-          console.log("Transaction réussie", response.data);
+          this.purchaseSuccessMessage = "Achat réussie";
+          setTimeout(() => {
+            this.purchaseSuccessMessage = null;
+          }, 2000);
         } else {
-          // Gérez les erreurs de l'API
           console.error("Erreur lors de la transaction", response.data);
         }
       } catch (error) {
         console.error("Erreur lors de la transaction", error);
-        // Gérez les erreurs qui peuvent survenir lors de l'appel API
       }
     },
-
     cancelPurchase() {
-      // Annuler l'achat et fermer la popup
       this.purchaseDialog = false;
     },
   },

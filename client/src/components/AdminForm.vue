@@ -30,7 +30,7 @@
         <label></label>
       </div>
       <!-- Login button -->
-      <button type="submit" variant="tonal">Login</button>
+      <button class="btn" type="submit" variant="tonal">Login</button>
     </form>
   </div>
 </template>
@@ -156,7 +156,7 @@ body {
   font-size: 12px;
 }
 
-button {
+.btn {
   background-color: #cdcbcb;
   border: none;
   border-radius: 20px;

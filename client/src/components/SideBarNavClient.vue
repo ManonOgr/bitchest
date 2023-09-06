@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Vue navigation drawer -->
-    <v-navigation-drawer app>
+    <v-navigation-drawer app v-model="drawer" :mini-variant.sync="mini">
       <!-- Logo image -->
       <img
         src="../assets/bitchest_logo.png"
@@ -42,7 +42,7 @@
     <!-- App bar for the application -->
     <v-app-bar app>
       <!-- Navigation icon for opening/closing sidebar -->
-      <v-app-bar-nav-icon @click.stop="toggleSidebar"> </v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="toggleSidebar"></v-app-bar-nav-icon>
       <!-- Title for the app bar -->
       <!-- Use pageTitle in v-toolbar-title -->
       <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
@@ -72,9 +72,17 @@ import { useRoute } from "vue-router";
 
 // State for the logout confirmation dialog
 const logoutDialog = ref(false);
+const sessionToken = localStorage.getItem("user");
 const route = useRoute();
 
-// Function to show the logout confirmation dialog
+// Add a ref for controlling the sidebar
+const drawer = ref(false);
+
+// Function to toggle the sidebar
+function toggleSidebar() {
+  drawer.value = !drawer.value;
+}
+
 function showLogoutDialog() {
   logoutDialog.value = true;
 }
@@ -89,7 +97,7 @@ function logout() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          // "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${sessionToken}`,
         },
         withCredentials: true,
       })

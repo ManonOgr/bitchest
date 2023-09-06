@@ -210,6 +210,10 @@ export default {
       this.sellDialog = true;
     },
 
+    cancelSellCrypto() {
+    this.sellDialog = false;
+  },
+
     isNegativeCapitalGain(transaction) {
       if (
         !isNaN(transaction.purchase_price) &&

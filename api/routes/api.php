@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route for user login
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/logout', [AuthController::class, 'logout']);
 // Route for user logout
+Route::get('/logout', [AuthController::class, 'logout']);
 
 // Route to get all users
 Route::get('/users', [UserController::class, 'getUsers']);

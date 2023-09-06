@@ -65,45 +65,49 @@ class TransactionController extends Controller
     }
 
 
-public function purchaseCrypto(Request $request)
-{
-    // Vérifiez si l'utilisateur est connecté
-    if (Auth::check()) {
-        // L'utilisateur est connecté, continuez avec la logique d'achat
-        $user = Auth::user();
+    public function purchaseCrypto(Request $request)
+    {
+        // Vérifiez si l'utilisateur est connecté
+        if (Auth::check()) {
+            // L'utilisateur est connecté, continuez avec la logique d'achat
+            $user = Auth::user();
 
-        // Validez les données reçues depuis la requête (par exemple, la quantité, le prix, etc.)
-        $validator = Validator::make($request->all(), [
-            'crypto_id' => 'required|integer', // ID de la crypto-monnaie
-            'quantity' => 'required|numeric',  // Quantité achetée
-            'purchase_price' => 'required|numeric',  // Prix d'achat
-        ]);
+            // Validez les données reçues depuis la requête (par exemple, la quantité, le prix, etc.)
+            $validator = Validator::make($request->all(), [
+                'currency_id' => 'required|integer', // ID de la crypto-monnaie
+                'quantity' => 'required|numeric',  // Quantité achetée
+                'purchase_price' => 'required|numeric',  // Prix d'achat
+                'selling_price' => 'required|numeric',  // Prix de vente
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            // Créez une nouvelle transaction d'achat
+            $transaction = new Transaction([
+                'currency_id' => $request->currency_id,
+                'quantity' => $request->quantity,
+                'purchase_price' => rand(100000, 1000000) / 100,
+                'selling_price' => rand(100000, 1000000) / 100,
+                'selling_date' => now()->subDays(rand(1, 30))->toDateTimeString(),
+                'purchase_date' => now(), // Date d'achat actuelle
+                'user_id' => $user->id, // Assurez-vous d'associer la transaction à l'utilisateur connecté
+            ]);
+
+            // Enregistrez la transaction dans la base de données
+            $transaction->save();
+
+            // Vous pouvez également effectuer d'autres opérations ici, telles que la mise à jour du solde de l'utilisateur, etc.
+
+            // Répondez avec un message de réussite ou les détails de la transaction
+            return response()->json(['message' => 'Transaction d\'achat réussie', 'transaction' => $transaction], 200);
+        } else {
+            // L'utilisateur n'est pas connecté, renvoyez une réponse d'erreur
+            return response()->json(['message' => 'Utilisateur non connecté'], 401);
         }
-
-        // Créez une nouvelle transaction d'achat
-        $transaction = new Transaction([
-            'crypto_id' => $request->crypto_id,
-            'quantity' => $request->quantity,
-            'purchase_price' => $request->purchase_price,
-            'purchase_date' => now(), // Date d'achat actuelle
-            'user_id' => $user->id, // Assurez-vous d'associer la transaction à l'utilisateur connecté
-        ]);
-
-        // Enregistrez la transaction dans la base de données
-        $transaction->save();
-
-        // Vous pouvez également effectuer d'autres opérations ici, telles que la mise à jour du solde de l'utilisateur, etc.
-
-        // Répondez avec un message de réussite ou les détails de la transaction
-        return response()->json(['message' => 'Transaction d\'achat réussie', 'transaction' => $transaction], 200);
-    } else {
-        // L'utilisateur n'est pas connecté, renvoyez une réponse d'erreur
-        return response()->json(['message' => 'Utilisateur non connecté'], 401);
     }
-}
+
 
 
 

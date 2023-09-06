@@ -4,15 +4,6 @@
     <!-- Sidebar navigation component -->
     <side-bar-nav></side-bar-nav>
 
-    <!-- App bar for the application -->
-    <v-app-bar app>
-      <!-- Navigation icon for opening/closing sidebar -->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <!-- Title for the app bar -->
-      <v-toolbar-title>Gestion Client</v-toolbar-title>
-      <!-- Client Management -->
-    </v-app-bar>
-
     <!-- Main content area -->
     <v-main>
       <v-container>

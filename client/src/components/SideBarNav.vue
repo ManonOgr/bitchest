@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Vue navigation drawer -->
-    <v-navigation-drawer app>
+    <v-navigation-drawer app :value="drawer" :mini-variant.sync="mini">
       <!-- Logo image -->
       <img
         src="../assets/bitchest_logo.png"
@@ -34,12 +34,17 @@
       </v-list>
       <!-- Logout button -->
       <div class="text-center">
-        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal"
-          >Déconnexion</v-btn
-        >
+        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal">Déconnexion</v-btn>
       </div>
     </v-navigation-drawer>
-
+    <!-- App bar for the application -->
+    <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
+      <v-app-bar-nav-icon @click.stop="toggleSidebar"> </v-app-bar-nav-icon>
+      <!-- Title for the app bar -->
+      <!-- Use pageTitle in v-toolbar-title -->
+      <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
+    </v-app-bar>
     <!-- Logout Confirmation Dialog -->
     <v-dialog v-model="logoutDialog" max-width="400">
       <v-card>
@@ -47,9 +52,7 @@
         <v-card-text> Êtes-vous sûr de vouloir vous déconnecter ? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="logoutDialog = false"
-            >Annuler</v-btn
-          >
+          <v-btn color="blue darken-1" text @click="logoutDialog = false">Annuler</v-btn>
           <v-btn color="blue darken-1" text @click="logout">Déconnexion</v-btn>
         </v-card-actions>
       </v-card>
@@ -58,47 +61,54 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axios from "axios"; // Import Axios library for HTTP requests
-import router from "@/routers"; // Import Vue Router instance for navigation
+import { ref, computed } from "vue";
+import axios from "axios";
+import router from "@/routers";
+import { useRoute } from "vue-router";
 
-// State for the logout confirmation dialog
 const logoutDialog = ref(false);
 const sessionToken = localStorage.getItem("user");
-// Function to show the logout confirmation dialog
+const route = useRoute();
+
 function showLogoutDialog() {
   logoutDialog.value = true;
 }
 
-// Function to handle logout
 function logout() {
   try {
-    // Send a POST request to logout endpoint
     axios
       .get("http://127.0.0.1:8000/api/logout", {
-        // Define request headers
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          // "Access-Control-Allow-Origin": "*",
           Authorization: `Bearer ${sessionToken}`,
         },
         withCredentials: true,
       })
       .then((res) => {
         console.log(res);
-        // If logout is successful, navigate to the home page
         if (res.status === 200) {
           router.push("/");
         }
       });
-
-    // Handle errors during the logout process
   } catch (error) {
     console.log(error);
   } finally {
-    // Close the logout confirmation dialog
     logoutDialog.value = false;
   }
 }
+
+// Update the pageTitle computed property to display titles based on the route
+const pageTitle = computed(() => {
+  switch (route.path) {
+    case "/dashboardadmin":
+      return "Données personnelles";
+    case "/customers":
+      return "Gestion des clients";
+    case "/ratesadmin":
+      return "Cours des Cryptos";
+    default:
+      return "Unknown Page";
+  }
+});
 </script>

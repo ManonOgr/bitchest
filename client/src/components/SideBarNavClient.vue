@@ -39,7 +39,14 @@
         >
       </div>
     </v-navigation-drawer>
-
+    <!-- App bar for the application -->
+    <v-app-bar app>
+      <!-- Navigation icon for opening/closing sidebar -->
+      <v-app-bar-nav-icon @click.stop="toggleSidebar"> </v-app-bar-nav-icon>
+      <!-- Title for the app bar -->
+      <!-- Use pageTitle in v-toolbar-title -->
+      <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
+    </v-app-bar>
     <!-- Logout Confirmation Dialog -->
     <v-dialog v-model="logoutDialog" max-width="400">
       <v-card>
@@ -58,12 +65,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axios from "axios"; // Import Axios library for HTTP requests
-import router from "@/routers"; // Import Vue Router instance for navigation
+import { ref, computed } from "vue";
+import axios from "axios";
+import router from "@/routers";
+import { useRoute } from "vue-router";
 
 // State for the logout confirmation dialog
 const logoutDialog = ref(false);
+const route = useRoute();
 
 // Function to show the logout confirmation dialog
 function showLogoutDialog() {
@@ -100,4 +109,18 @@ function logout() {
     logoutDialog.value = false;
   }
 }
+
+// Update the pageTitle computed property to display titles based on the route
+const pageTitle = computed(() => {
+  switch (route.path) {
+    case "/dashboardclient":
+      return "Données personnelles";
+    case "/wallet":
+      return "Portefeuille";
+    case "/ratesclient":
+      return "Cours des Cryptos";
+    default:
+      return "Unknown Page";
+  }
+});
 </script>

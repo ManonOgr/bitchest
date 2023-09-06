@@ -4,13 +4,6 @@
     <!-- Sidebar navigation component -->
     <sidebar-nav-client></sidebar-nav-client>
 
-    <!-- App bar for the application -->
-    <v-app-bar app>
-      <!-- Navigation icon for opening/closing sidebar -->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Cours des cryptos</v-toolbar-title>
-    </v-app-bar>
-
     <!-- Main content area -->
     <v-main>
       <v-container>

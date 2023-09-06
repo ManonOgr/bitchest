@@ -3,15 +3,6 @@
   <v-app>
     <!-- Client-specific sidebar navigation component -->
     <sidebar-nav-client></sidebar-nav-client>
-
-    <!-- App bar for the application -->
-    <v-app-bar app>
-      <!-- Navigation icon for opening/closing sidebar -->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <!-- Title for the app bar -->
-      <v-toolbar-title>Données personnelles(Client)</v-toolbar-title>
-    </v-app-bar>
-
     <!-- Main content area -->
     <v-main>
       <!-- Container for the client dashboard component -->

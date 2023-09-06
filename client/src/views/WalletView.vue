@@ -166,14 +166,12 @@ export default {
       return totalBalanceEuros;
     },
 
-    confirmSellCrypto(transaction) {
-      this.transactionToSell = transaction;
-      this.sellDialog = true;
-    },
-
     async sellCrypto(transaction) {
       try {
-        // Commencez la vente (par exemple, suppression de la transaction)
+        // Supprimer la transaction de la base de données
+        await axios.delete(`/api/transactions/${transaction.id}`);
+
+        // Mise à jour de l'interface utilisateur : Suppression de la transaction de la liste
         const index = this.userTransactions.findIndex(
           (t) => t.id === transaction.id
         );
@@ -207,8 +205,9 @@ export default {
       }
     },
 
-    cancelSellCrypto() {
-      this.sellDialog = false;
+    confirmSellCrypto(transaction) {
+      this.transactionToSell = transaction;
+      this.sellDialog = true;
     },
 
     isNegativeCapitalGain(transaction) {
@@ -256,6 +255,7 @@ export default {
       return "";
     },
   },
+
   components: { SideBarNavClient },
 };
 </script>

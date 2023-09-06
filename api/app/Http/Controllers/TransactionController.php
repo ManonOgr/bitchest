@@ -207,4 +207,27 @@ class TransactionController extends Controller
         // Renvoie une réponse JSON avec le statut "ok"
         return response()->json(['status' => 'ok']);
     }
+
+    public function destroy($id)
+{
+    try {
+        // Recherchez la transaction par son ID
+        $transaction = Transaction::find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        // Vous pouvez ajouter ici des vérifications supplémentaires, par exemple, si la transaction appartient à l'utilisateur actuellement authentifié.
+
+        // Supprimez la transaction de la base de données
+        $transaction->delete();
+
+        return response()->json(['message' => 'Transaction deleted successfully'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error while deleting the transaction'], 500);
+    }
 }
+
+}
+

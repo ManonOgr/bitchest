@@ -69,3 +69,6 @@ Route::delete('/sell-crypto/{id}', [TransactionController::class, 'sellCrypto'])
 
 // Route to purchase crypto
 Route::post('/purchase', [TransactionController::class, 'purchaseCrypto']);
+
+// Route pour supprimer une transaction après une vente
+Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);

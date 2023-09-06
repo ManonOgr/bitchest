@@ -11,7 +11,7 @@
           <h1 class="headline">Liste des utilisateurs</h1>
           <!-- List of users -->
           <v-responsive>
-            <v-btn color="success" @click="openAddUserDialog">Ajouter</v-btn>
+            <v-btn class="add" color="success" @click="openAddUserDialog">Ajouter</v-btn>
             <!-- Add -->
             <v-table height="570px">
               <thead>
@@ -349,6 +349,10 @@ export default {
 
 .pa-2 {
   padding: 16px;
+}
+
+.add{
+  margin-bottom: 15px;
 }
 
 .btn {

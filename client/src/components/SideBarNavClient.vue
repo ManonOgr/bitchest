@@ -12,16 +12,10 @@
       <v-list>
         <!-- Navigate to admin dashboard -->
         <v-list-item link to="/dashboardclient">
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Données personnelles</v-list-item-title>
         </v-list-item>
         <!-- Navigate to customers management -->
         <v-list-item link to="/wallet">
-          <v-list-item-icon>
-            <v-icon>mdi-account</v-icon>
-          </v-list-item-icon>
           <v-list-item-title>Portefeuille</v-list-item-title>
         </v-list-item>
         <!-- Navigate to crypto rates configuration -->
@@ -41,8 +35,8 @@
     </v-navigation-drawer>
     <!-- App bar for the application -->
     <v-app-bar app>
-      <!-- Navigation icon for opening/closing sidebar -->
-      <v-app-bar-nav-icon @click="toggleSidebar"></v-app-bar-nav-icon>
+      <!-- Navigation icon for opening/closing sidebar (visible on small screens) -->
+      <v-app-bar-nav-icon class="d-sm-none" @click="toggleSidebar"></v-app-bar-nav-icon>
       <!-- Title for the app bar -->
       <!-- Use pageTitle in v-toolbar-title -->
       <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
@@ -75,8 +69,8 @@ const logoutDialog = ref(false);
 const sessionToken = localStorage.getItem("user");
 const route = useRoute();
 
-// Add a ref for controlling the sidebar
-const drawer = ref(false);
+const drawer = ref(true);
+const mini = ref(false);
 
 // Function to toggle the sidebar
 function toggleSidebar() {

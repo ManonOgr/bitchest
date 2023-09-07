@@ -78,7 +78,6 @@ export default {
           router.push("/dashboardadmin"); // Redirect to the admin dashboard
         }
       } catch (error) {
-        console.log("Error during the request:", error);
         if (
           error.response &&
           error.response.data &&

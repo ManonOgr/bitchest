@@ -188,9 +188,6 @@ export default {
         // Recalculate the total balance in euros
         this.totalBalanceEuros = await this.calculateTotalBalanceEuros();
 
-        // Display a success message (you can replace this with your own notification mechanism)
-        console.log(`Sale confirmed for: ${transaction.currency_name}`);
-
         // Automatically close the dialog after confirmation
         this.sellDialog = false;
 

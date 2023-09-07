@@ -36,7 +36,10 @@
     <!-- App bar for the application -->
     <v-app-bar app>
       <!-- Navigation icon for opening/closing sidebar (visible on small screens) -->
-      <v-app-bar-nav-icon class="d-sm-none" @click="toggleSidebar"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        class="d-sm-none"
+        @click="toggleSidebar"
+      ></v-app-bar-nav-icon>
       <!-- Title for the app bar -->
       <!-- Use pageTitle in v-toolbar-title -->
       <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
@@ -96,7 +99,6 @@ function logout() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
         // If logout is successful, navigate to the home page
         if (res.status === 200) {
           router.push("/");

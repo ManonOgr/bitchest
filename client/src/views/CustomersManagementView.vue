@@ -11,7 +11,9 @@
           <h1 class="headline">Liste des utilisateurs</h1>
           <!-- List of users -->
           <v-responsive>
-            <v-btn class="add" color="success" @click="openAddUserDialog">Ajouter</v-btn>
+            <v-btn class="add" color="success" @click="openAddUserDialog"
+              >Ajouter</v-btn
+            >
             <!-- Add -->
             <v-table height="570px">
               <thead>
@@ -107,15 +109,19 @@
             ></v-text-field>
             <!-- Email -->
             <div>
-        <!-- Dropdown for user status selection -->
+              <!-- Dropdown for user status selection -->
               <select id="status" v-model="userData.status" required>
-                <option value="" disabled selected>Selectionne un status</option>
+                <option value="" disabled selected>
+                  Selectionne un status
+                </option>
                 <option value="client">Client</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
             <!-- Button to confirm the update -->
-            <v-btn @click="showEditConfirmationDialog" depressed color="purple">Modifier</v-btn>
+            <v-btn @click="showEditConfirmationDialog" depressed color="purple"
+              >Modifier</v-btn
+            >
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -129,7 +135,9 @@
     <!-- Popup for confirmation of edit -->
     <v-dialog v-model="confirmEditDialog" max-width="400">
       <v-card>
-        <v-card-title class="headline">Confirmation de modification</v-card-title>
+        <v-card-title class="headline"
+          >Confirmation de modification</v-card-title
+        >
         <v-card-text>
           Êtes-vous sûr de vouloir appliquer ces modifications ?
           <!-- Are you sure you want to apply these changes? -->
@@ -180,7 +188,9 @@
             <div>
               <!-- Menu déroulant pour la sélection du statut de l'utilisateur -->
               <select id="status" v-model="userData.status" required>
-                <option value="" disabled selected>Selectionne un status</option>
+                <option value="" disabled selected>
+                  Selectionne un status
+                </option>
                 <option value="client">Client</option>
                 <option value="admin">Admin</option>
               </select>
@@ -219,7 +229,7 @@ export default {
         last_name: "",
         email: "",
         status: "",
-        password: ""
+        password: "",
       },
       confirmEditDialog: false,
     };
@@ -270,10 +280,10 @@ export default {
       const userId = this.userData.id;
       axios
         .put(`/api/users/${userId}`, this.userData)
-        .then((response) => {
-          console.log(response.data.message);
-
-          const updatedUserIndex = this.users.findIndex((user) => user.id === userId);
+        .then(() => {
+          const updatedUserIndex = this.users.findIndex(
+            (user) => user.id === userId
+          );
           if (updatedUserIndex !== -1) {
             this.users[updatedUserIndex] = { ...this.userData };
           }
@@ -294,7 +304,7 @@ export default {
         last_name: "",
         email: "",
         status: "",
-        password: ""
+        password: "",
       };
     },
     closeAddUserDialog() {
@@ -302,22 +312,20 @@ export default {
     },
     addUser() {
       axios
-        .post('/api/users', this.userData)
-        .then(response => {
-          console.log(response.data.message);
-
+        .post("/api/users", this.userData)
+        .then((response) => {
           // Add the new user to the list of users
           this.users.push({ ...this.userData, id: response.data.id });
 
-          this.addUserDialog = false; 
+          this.addUserDialog = false;
 
           // Reload the table after adding a user
           this.fetchUsers();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
-    }
+    },
   },
   components: { SideBarNav },
 };
@@ -351,7 +359,7 @@ export default {
   padding: 16px;
 }
 
-.add{
+.add {
   margin-bottom: 15px;
 }
 

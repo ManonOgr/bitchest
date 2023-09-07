@@ -28,13 +28,18 @@
       </v-list>
       <!-- Logout button -->
       <div class="text-center">
-        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal">Déconnexion</v-btn>
+        <v-btn @click="showLogoutDialog" class="mt-4" variant="tonal"
+          >Déconnexion</v-btn
+        >
       </div>
     </v-navigation-drawer>
     <!-- App bar for the application -->
     <v-app-bar app>
       <!-- Navigation icon for opening/closing sidebar (visible on small screens) -->
-      <v-app-bar-nav-icon class="d-sm-none" @click="toggleSidebar"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        class="d-sm-none"
+        @click="toggleSidebar"
+      ></v-app-bar-nav-icon>
       <!-- Title for the app bar -->
       <!-- Use pageTitle in v-toolbar-title -->
       <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
@@ -46,7 +51,9 @@
         <v-card-text> Êtes-vous sûr de vouloir vous déconnecter ? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="logoutDialog = false">Annuler</v-btn>
+          <v-btn color="blue darken-1" text @click="logoutDialog = false"
+            >Annuler</v-btn
+          >
           <v-btn color="blue darken-1" text @click="logout">Déconnexion</v-btn>
         </v-card-actions>
       </v-card>
@@ -88,7 +95,6 @@ function logout() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           router.push("/");
         }

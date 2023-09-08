@@ -20,8 +20,8 @@ class UserTableSeeder extends Seeder
         User::factory()->count(5)->create();
         // create Admin
         DB::table('users')->insert([
-            'first_name' => 'Admin',
-            'last_name' => 'Admin',
+            'first_name' => 'Paul',
+            'last_name' => 'Lefevre',
             'email' => 'admin@admin.com',
             'status' => 'admin',
             'password' => Hash::make('Admin'),

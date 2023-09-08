@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './routers';
-import store from './store/index';
-import '@/assets/css/mdi.css'; // Remplacez par le chemin vers votre fichier mdi.css
+import store from './store/index'; //Import Store VueX
+import '@/assets/css/mdi.css'; 
 
 import axios from 'axios';
 axios.defaults.baseURL = "http://localhost:8000/";
@@ -22,5 +22,5 @@ const app = createApp(App);
 
 app.use(vuetify);
 app.use(router);
-app.use(store); 
+app.use(store); //Use Store VueX
 app.mount('#app');

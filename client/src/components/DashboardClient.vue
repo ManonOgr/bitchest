@@ -33,7 +33,7 @@ export default {
     };
   },
   mounted() {
-    // Assume you have stored user data in a Vuex store or similar
+    // Use Store VueX
     this.lastName = this.$store.state.userData.last_name; // Set last name from stored data
     this.firstName = this.$store.state.userData.first_name; // Set first name from stored data
     this.email = this.$store.state.userData.email; // Set email from stored data

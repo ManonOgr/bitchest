@@ -24,13 +24,13 @@
           type="password"
           name="password"
           required
-          placeholder="password"
+          placeholder="mot de passe"
           v-model="form.password"
         />
         <label></label>
       </div>
       <!-- Login button -->
-      <button class="btn" type="submit" variant="tonal">Login</button>
+      <button class="btn" type="submit" variant="tonal">Connexion</button>
     </form>
   </div>
 </template>

@@ -51,7 +51,7 @@ export default {
           labels: cryptoData.labels,
           datasets: [
             {
-              label: `Price of ${this.selectedCrypto.name}`,
+              label: `Prix : ${this.selectedCrypto.name}`,
               data: cryptoData.values,
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
@@ -74,13 +74,13 @@ export default {
               beginAtZero: false,
               title: {
                 display: true,
-                text: "Price Variation",
+                text: "Variation",
               },
             },
           },
           title: {
             display: true,
-            text: `Price of ${this.selectedCrypto.name}`,
+            text: `Price : ${this.selectedCrypto.name}`,
           },
         },
       });

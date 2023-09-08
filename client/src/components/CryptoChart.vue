@@ -30,7 +30,7 @@ export default {
         labels: cryptoData.labels,
         datasets: [
           {
-            label: `Crypto ${this.cryptoId} Price`,
+            label: `Prix ${this.cryptoId} Crypto`,
             data: cryptoData.values,
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,

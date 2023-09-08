@@ -7,7 +7,7 @@
     <v-main>
       <v-container>
         <h1>Liste de mes Cryptos</h1>
-        <h2>Solde mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
+        <h2>Sommes de mes cryptos en Euros: {{ formattedTotalBalanceEuros }}</h2>
         <h2>Solde de mon compte en Euros: {{ formattedFakeAccountBalance }}</h2>
         <v-responsive>
           <v-table height="570px">

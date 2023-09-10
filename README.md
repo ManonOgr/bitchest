@@ -65,4 +65,10 @@ Password: Admin
   ```
 **php artisan serve to then consult the project at the address indicated**
 
+## Client Logs
+```
+Email: quentinleroy@example.com
+Password: QuentinL
+```
+
 

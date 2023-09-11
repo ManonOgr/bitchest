@@ -197,7 +197,7 @@ export default {
         if (response.status === 200) {
           this.selectedQuantity = 0;
           this.purchaseDialog = false;
-          this.purchaseSuccessMessage = "Achat réussie";
+          this.purchaseSuccessMessage = "Achat réussi";
           setTimeout(() => {
             this.purchaseSuccessMessage = null;
           }, 2000);
